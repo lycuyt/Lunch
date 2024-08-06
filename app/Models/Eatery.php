@@ -9,5 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 class Eatery extends Model
 {
     use HasFactory;
+    protected $table = 'eateries';
     protected $fillable = ['name', 'address', 'phone'];
+    public function foods()
+    {
+        return $this->hasMany(Food::class);
+    }
+    public function lunchRequests()
+    {
+        return $this->hasMany(LunchRequest::class);
+    }
 }

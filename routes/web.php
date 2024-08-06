@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EateryController;
-use App\Models\Eatery;
+use App\Http\Controllers\FoodController;
+use App\Models\LunchRequest;
+use App\Http\Controllers\LunchRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +25,13 @@ Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::get('/login', [UserController::class, 'showLoginForm']);
 Route::post('/login', [UserController::class, 'login'])->name('login');
 
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [UserController::class, 'showAdmin'])->name('admin');
     Route::get('/employee', [UserController::class, 'showEmployee'])->name('employee');
+    Route::resource('eatery', EateryController::class);
+    Route::resource('food', FoodController::class);
+    // Route::resource('admin', LunchRequestController::class);
 });
 
-Route::resource('eatery', EateryController::class);

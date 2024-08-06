@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Thêm quán ăn</h1>
+    <h1>Sửa quán ăn</h1>
     <form action="/eatery/{{$eatery->id}}" method="POST">
         @csrf
         @method('PUT')

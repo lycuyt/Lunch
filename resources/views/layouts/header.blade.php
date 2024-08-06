@@ -13,13 +13,17 @@
             <a class="nav-link {{ request() -> is('eatery') ? 'active': ''}}" href="eatery">Quán ăn</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {{ request() -> is('cars') ? 'active': ''}}" href="cars">Món ăn</a>
+            <a class="nav-link {{ request() -> is('food') ? 'active': ''}}" href="food">Món ăn</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {{ request() -> is('contact') ? 'active': ''}}" href="contact">Nhân viên</a>
+            <a class="nav-link {{ request() -> is('') ? 'active': ''}}" href="">Thống kê</a>
           </li>
         </ul>
-        
+        <form class="d-flex px-5" action="/logout" method="POST">
+          @csrf
+          <button class="btn btn-primary" type="submit">Log out</button>
+      </form>
+      
       </div>
     </div>
 </nav>

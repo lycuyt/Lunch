@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\Eatery;
 class UserController extends Controller
 {
     public function showRegistrationForm()
@@ -67,7 +67,9 @@ class UserController extends Controller
 
     public function showAdmin()
     {
-        return view('admin.index');
+        $eateries = Eatery::all();
+        // dd($eateries);  
+        return view('admin.index', compact('eateries'));
     }
     public function showEmployee()
     {

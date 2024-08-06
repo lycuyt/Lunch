@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Eatery;
 
-class EateryController extends Controller
+class LunchRequestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,11 +13,7 @@ class EateryController extends Controller
      */
     public function index()
     {
-        $eateries = Eatery::all();
-        // dd($eateries);
-        return view('eatery.index',[
-            'eateries' => $eateries
-        ]);
+        
     }
 
     /**
@@ -28,7 +23,7 @@ class EateryController extends Controller
      */
     public function create()
     {
-        return view('eatery.create');   
+        //
     }
 
     /**
@@ -39,20 +34,7 @@ class EateryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'address' => 'required',
-            'phone' => 'required',
-        ]);
-
-        $eatery = Eatery::create([
-            'name' => $request->input('name'),
-            'address' => $request->input('address'),
-            'phone' => $request->input('phone'),
-        ]);
-
-        $eatery->save();
-        return redirect('/eatery')->with('success', 'Eatery has been added');
+        //
     }
 
     /**
@@ -74,8 +56,7 @@ class EateryController extends Controller
      */
     public function edit($id)
     {
-        $eatery = Eatery::find($id)->first();
-        return view('eatery.edit')->with('eatery',$eatery);
+        //
     }
 
     /**
@@ -87,12 +68,7 @@ class EateryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $eatery = Eatery::where('id',$id)->update([
-            'name' => $request->input('name'),
-            'address' => $request->input('address'),
-            'phone' => $request->input('phone'),
-        ]);
-        return redirect('/eatery')->with('success', 'Eatery has been updated');
+        //
     }
 
     /**
@@ -103,8 +79,6 @@ class EateryController extends Controller
      */
     public function destroy($id)
     {
-        $eatery = Eatery::find($id);
-        $eatery->delete();
-        return redirect('/eatery')->with('success', 'Eatery has been deleted');  
+        //
     }
 }

@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('foods', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('eatery_id');
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('role');
-            $table->rememberToken();
+            $table->string('description');
+            $table->float('price');
             $table->timestamps();
+            $table->foreign('eatery_id')->references('id')->on('eateries')->onDelete('cascade');
+            
         });
     }
 
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('food');
     }
 };
