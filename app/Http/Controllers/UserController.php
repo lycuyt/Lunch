@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Eatery;
+use App\Models\LunchRequest;
 class UserController extends Controller
 {
     public function showRegistrationForm()
@@ -68,8 +69,9 @@ class UserController extends Controller
     public function showAdmin()
     {
         $eateries = Eatery::all();
+        $lunchRequests = LunchRequest::orderBy('date', 'desc')->get();
         // dd($eateries);  
-        return view('admin.index', compact('eateries'));
+        return view('admin.index', compact('eateries', 'lunchRequests'));
     }
     public function showEmployee()
     {

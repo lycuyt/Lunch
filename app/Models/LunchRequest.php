@@ -16,7 +16,7 @@ class LunchRequest extends Model
     }
 
     // Quan hệ với Restaurant
-    public function restaurant()
+    public function eatery()
     {
         return $this->belongsTo(Eatery::class);
     }

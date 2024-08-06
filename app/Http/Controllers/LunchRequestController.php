@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\LunchRequest;
 class LunchRequestController extends Controller
 {
     /**
@@ -13,7 +13,7 @@ class LunchRequestController extends Controller
      */
     public function index()
     {
-        
+        //
     }
 
     /**
@@ -34,7 +34,20 @@ class LunchRequestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'eatery_id' => 'required|exists:eateries,id',
+            'start_time' => 'required|date',
+        ]);
+
+        // Tạo một yêu cầu ăn trưa mới
+        LunchRequest::create([
+            'eatery_id' => $request->input('eatery_id'),
+            'date' => $request->input('start_time'),
+            'user_id' => auth()->user()->id,
+        ]);
+
+        // Chuyển hướng về trang danh sách yêu cầu ăn trưa với thông báo thành công
+        return redirect()->route('admin')->with('success', 'Yêu cầu ăn trưa đã được lưu thành công.');
     }
 
     /**

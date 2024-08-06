@@ -32,6 +32,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/employee', [UserController::class, 'showEmployee'])->name('employee');
     Route::resource('eatery', EateryController::class);
     Route::resource('food', FoodController::class);
-    // Route::resource('admin', LunchRequestController::class);
+    Route::resource('lunch_request', LunchRequestController::class);
 });
 

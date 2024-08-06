@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('eatery_id');
-            $table->date('date');
+            $table->timestamp('date');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('eatery_id')->references('id')->on('eateries')->onDelete('cascade');
