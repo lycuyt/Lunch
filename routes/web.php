@@ -7,6 +7,8 @@ use App\Http\Controllers\FoodController;
 use App\Models\LunchRequest;
 use App\Http\Controllers\LunchRequestController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\StatisticsController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('employee/showFoods/{id}', [LunchRequestController::class, 'show'])->name('show');
     Route::get('/ordered', [UserController::class, 'showOrder'])->name('ordered');
+    Route::get('/statistics', [StatisticsController::class, 'index']);
 
 });
 

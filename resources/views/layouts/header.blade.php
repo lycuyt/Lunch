@@ -16,7 +16,7 @@
             <a class="nav-link {{ request() -> is('food') ? 'active': ''}}" href="food">Món ăn</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {{ request() -> is('') ? 'active': ''}}" href="">Thống kê</a>
+            <a class="nav-link {{ request() -> is('statistics') ? 'active': ''}}" href="statistics">Thống kê</a>
           </li>
         </ul>
         <form class="d-flex px-5" action="/logout" method="POST">
