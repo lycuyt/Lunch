@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Eatery;
 use App\Models\LunchRequest;
+use Carbon\Carbon;
+use App\Models\Order;
 class UserController extends Controller
 {
     public function showRegistrationForm()
@@ -38,16 +40,6 @@ class UserController extends Controller
         return view('auth.login');
     }
 
-    // public function login(Request $request)
-    // {
-    //     $credentials = $request->only('email', 'password');
-
-    //     if (Auth::attempt($credentials)) {
-    //         return redirect()->intended('/');
-    //     }
-
-    //     return redirect('/admin/index')->with('error', 'Invalid credentials. Please try again.');
-    // }
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -75,7 +67,10 @@ class UserController extends Controller
     }
     public function showEmployee()
     {
-        return view('employee.index');
+        $lunchRequests = LunchRequest::whereDate('date', Carbon::today())
+                                            ->orderBy('date', 'desc')
+                                            ->get();
+        return view('employee.index', compact('lunchRequests'));
     }
     public function logout(Request $request)
     {
@@ -84,5 +79,15 @@ class UserController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/login');
+    }
+    // show order by user
+    public function showOrder()
+    {
+        $orders = Order::where('user_id', auth()->user()->id)
+            ->orderBy('created_at', 'asc') 
+            ->get();
+
+        $lunchRequests = LunchRequest::whereIn('id', $orders->pluck('lunch_request_id'))->get();
+        return view('employee.ordered', compact('orders', 'lunchRequests'));
     }
 }

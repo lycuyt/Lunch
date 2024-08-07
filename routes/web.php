@@ -6,7 +6,7 @@ use App\Http\Controllers\EateryController;
 use App\Http\Controllers\FoodController;
 use App\Models\LunchRequest;
 use App\Http\Controllers\LunchRequestController;
-
+use App\Http\Controllers\OrderController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,5 +33,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('eatery', EateryController::class);
     Route::resource('food', FoodController::class);
     Route::resource('lunch_request', LunchRequestController::class);
+    Route::resource('order', OrderController::class);
+
+    Route::get('employee/showFoods/{id}', [LunchRequestController::class, 'show'])->name('show');
+    Route::get('/ordered', [UserController::class, 'showOrder'])->name('ordered');
+
 });
 

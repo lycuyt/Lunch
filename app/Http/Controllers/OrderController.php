@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
-use App\Models\LunchRequest;
-class LunchRequestController extends Controller
+
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,20 +35,20 @@ class LunchRequestController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'eatery_id' => 'required|exists:eateries,id',
-            'start_time' => 'required|date',
-        ]);
+        $order = new Order();
 
-        // Tạo một yêu cầu ăn trưa mới
-        LunchRequest::create([
-            'eatery_id' => $request->input('eatery_id'),
-            'date' => $request->input('start_time'),
-            'user_id' => auth()->user()->id,
-        ]);
+        // Gán các giá trị từ request
+        $order->food_id = $request->input('food_id');
+        $order->quantity = $request->input('quantity');
+        $order->note = $request->input('note');
+        $order->user_id = auth()->user()->id; // Giả sử người dùng đã đăng nhập
+        $order->lunch_request_id = $request->input('lunch_request_id'); // Lưu lunch_request_id
 
-        // Chuyển hướng về trang danh sách yêu cầu ăn trưa với thông báo thành công
-        return redirect()->route('admin')->with('success', 'Yêu cầu ăn trưa đã được lưu thành công.');
+        // Lưu đơn đặt món
+        $order->save();
+
+        // Chuyển hướng về trang chủ với thông báo thành công
+        return redirect()->route('employee')->with('success', 'Đơn đặt món đã được lưu.');
     }
 
     /**
@@ -58,11 +59,7 @@ class LunchRequestController extends Controller
      */
     public function show($id)
     {
-        //show the foods in the eatery
-        $lunch_request = LunchRequest::find($id);
-        $eatery = $lunch_request->eatery;
-        $foods = $lunch_request->eatery->foods;
-        return view('employee.showFoods', compact('lunch_request','eatery', 'foods'));
+        //
     }
 
     /**
