@@ -38,8 +38,8 @@
           </a>
       </li>
 
-      <li class="{{ Request::is('foods') ? 'active' : '' }}">
-          <a href="{{ url('foods') }}">
+      <li class="{{ Request::is('food') ? 'active' : '' }}">
+          <a href="{{ url('food') }}">
             <i class="fa fa-th"></i> <span>Quản lý món ăn</span>
           </a>
       </li>

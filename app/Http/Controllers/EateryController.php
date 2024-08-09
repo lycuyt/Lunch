@@ -14,7 +14,7 @@ class EateryController extends Controller
      */
     public function index()
     {
-        $eateries = Eatery::all();
+        $eateries = Eatery::paginate(7); ;
         // dd($eateries);
         return view('eatery.index',[
             'eateries' => $eateries

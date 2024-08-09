@@ -52,6 +52,6 @@ Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
         Route::get('/admin', [UserController::class, 'showAdmin'])->name('admin');
         Route::resource('eatery', EateryController::class);
-        // Route::resource('food', FoodController::class);
-        // Route::resource('lunch_request', LunchRequestController::class);
-        // Route::get('/statistics', [StatisticsController::class, 'index']);
+        Route::resource('food', FoodController::class);
+        Route::resource('lunch_request', LunchRequestController::class);
+        Route::get('/statistics', [StatisticsController::class, 'index']);

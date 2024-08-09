@@ -9,7 +9,7 @@ class LunchRequest extends Model
 {
     use HasFactory;
     protected $table = 'lunch_requests';
-    protected $fillable = ['user_id', 'eatery_id', 'date', 'admin_id'];
+    protected $fillable = ['user_id', 'eatery_id', 'date', 'admin_id', 'status', 'note'];
     public function admin()
     {
         return $this->belongsTo(User::class, 'admin_id');

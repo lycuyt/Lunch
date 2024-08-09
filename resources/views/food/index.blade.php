@@ -22,9 +22,9 @@
 @section('content')
     <div class="container">
         <div class="eateries">
-            <h1>Quản lý quán ăn</h1>
-            <a href="eatery/create" class="btn btn-primary"  role="button" aria-disabled="true">
-              Thêm mới quán ăn
+            <h1>Quản lý món ăn</h1>
+            <a href="food/create" class="btn btn-primary" role="button" aria-disabled="true">
+                Thêm mới quán ăn
             </a>
         </div>
     </div>
@@ -43,29 +43,29 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Tên quán ăn</th>
-                                    <th>Địa chỉ</th>
-                                    <th>Số điện thoại</th>
+                                    <th>Tên món ăn</th>
+                                    <th>Giá</th>
+                                    <th>Quán ăn</th>
                                     <th>Sửa</th>
                                     <th>Xóa</th>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                @foreach ($eateries as $index => $item)
+                                @foreach ($foods as $index => $item)
                                     <tr>
                                         <th scope="row">
-                                            {{ $index + 1 + ($eateries->currentPage() - 1) * $eateries->perPage() }}</th>
+                                            {{ $index + 1 + ($foods->currentPage() - 1) * $foods->perPage() }}</th>
                                         <td>{{ $item->name }} </td>
-                                        <td>{{ $item->address }}</td>
-                                        <td>{{ $item->phone }}</td>
+                                        <td>{{ number_format($item->price, 2) }} VND</td>
+                                        <td>{{ $item->eatery->name }}</td>
                                         <td>
-                                            <a href="eatery/{{ $item->id }}/edit">
+                                            <a href="food/{{ $item->id }}/edit">
                                                 <button type="button" class="btn btn-info">Sửa</button>
                                             </a>
                                         </td>
                                         <td>
-                                            <form action="eatery/{{ $item->id }}" method="POST">
+                                            <form action="food/{{ $item->id }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger">Xóa</button>
@@ -78,7 +78,7 @@
                             </tbody>
 
                         </table>
-                        {{ $eateries->links() }}
+                        {{ $foods->links() }}
                     </div>
                     <!-- /.box-body -->
                 </div>

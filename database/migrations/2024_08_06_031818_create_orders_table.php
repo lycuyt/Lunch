@@ -19,6 +19,8 @@ return new class extends Migration
             $table->unsignedInteger('food_id');
             $table->unsignedInteger('lunch_request_id');
             $table->integer('quantity');
+            $table->string('method');
+            $table->string('status');
             $table->string('note');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

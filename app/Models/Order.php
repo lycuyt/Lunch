@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
+    protected $fillable = ['lunch_request_id', 'user_id', 'food_id', 'quantity', 'method', 'status', 'note'];
+    protected $table = 'orders';       
     public function lunchRequest()
     {
         return $this->belongsTo(LunchRequest::class);
