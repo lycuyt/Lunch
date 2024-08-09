@@ -10,6 +10,7 @@ use App\Models\Eatery;
 use App\Models\LunchRequest;
 use Carbon\Carbon;
 use App\Models\Order;
+
 class UserController extends Controller
 {
     public function showRegistrationForm()
@@ -40,22 +41,39 @@ class UserController extends Controller
         return view('auth.login');
     }
 
+    // public function login(Request $request)
+    // {
+    //     $credentials = $request->only('email', 'password');
+
+    //     if (Auth::attempt($credentials)) {
+    //         $user = Auth::user();
+
+    //         // Redirect based on role
+    //         if ($user->role === 'admin') {
+    //             return redirect()->intended('/admin');
+    //         } elseif ($user->role === 'employee') {
+    //             return redirect()->intended('/employee');
+    //         }
+    //     }
+
+    //     return redirect('/login')->with('error', 'Invalid credentials. Please try again.');
+    // }
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            
-            // Redirect based on role
-            if ($user->role === 'admin') {
-                return redirect()->intended('/admin');
-            } elseif ($user->role === 'employee') {
-                return redirect()->intended('/employee');
+            // Kiểm tra role và chuyển hướng dựa trên role
+            if (Auth::user()->role === 'admin') {
+                return redirect()->route('admin');
+            } elseif (Auth::user()->role === 'employee') {
+                return redirect()->route('employee');
             }
         }
 
-        return redirect('/login')->with('error', 'Invalid credentials. Please try again.');
+        return redirect()->back()->withErrors([
+            'email' => 'These credentials do not match our records.',
+        ]);
     }
 
     public function showAdmin()
@@ -68,8 +86,8 @@ class UserController extends Controller
     public function showEmployee()
     {
         $lunchRequests = LunchRequest::whereDate('date', Carbon::today())
-                                            ->orderBy('date', 'desc')
-                                            ->get();
+            ->orderBy('date', 'desc')
+            ->get();
         return view('employee.index', compact('lunchRequests'));
     }
     public function logout(Request $request)
@@ -84,7 +102,7 @@ class UserController extends Controller
     public function showOrder()
     {
         $orders = Order::where('user_id', auth()->user()->id)
-            ->orderBy('created_at', 'asc') 
+            ->orderBy('created_at', 'asc')
             ->get();
 
         $lunchRequests = LunchRequest::whereIn('id', $orders->pluck('lunch_request_id'))->get();
