@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LunchRequest;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,10 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        // lay ra ra tat ca nhung lunch_request trong database
+        $lunch_requests = LunchRequest::all();
+        dd($lunch_requests);
+        return view('employee.index', compact('lunch_requests'));
     }
 
     /**

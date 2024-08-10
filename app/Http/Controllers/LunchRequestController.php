@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Eatery;
 use Illuminate\Http\Request;
 use App\Models\LunchRequest;
+use Illuminate\Support\Facades\Auth;
+
 class LunchRequestController extends Controller
 {
     /**
@@ -13,7 +16,12 @@ class LunchRequestController extends Controller
      */
     public function index()
     {
-        return view('lunch_request.index');
+        // lay ra cac yeu cau an trua cua user hien tai
+        $lunch_requests = LunchRequest::where('user_id', auth()->user()->id)
+            ->orderBy('created_at', 'desc')  // Sắp xếp theo ngày tạo từ mới nhất đến cũ nhất
+            ->paginate(7);  // Phân trang với 7 yêu cầu trên mỗi trang
+
+        return view('lunch_request.index', compact('lunch_requests'));
     }
 
     /**
@@ -23,7 +31,8 @@ class LunchRequestController extends Controller
      */
     public function create()
     {
-        //
+        $eateries = Eatery::all();
+        return view('lunch_request.create', compact('eateries'));
     }
 
     /**
@@ -37,6 +46,7 @@ class LunchRequestController extends Controller
         $request->validate([
             'eatery_id' => 'required|exists:eateries,id',
             'start_time' => 'required|date',
+            'notes' => 'nullable|string',
         ]);
 
         // Tạo một yêu cầu ăn trưa mới
@@ -44,10 +54,12 @@ class LunchRequestController extends Controller
             'eatery_id' => $request->input('eatery_id'),
             'date' => $request->input('start_time'),
             'user_id' => auth()->user()->id,
+            'note' => $request->input('notes'),
+            'status' => 'open',
         ]);
 
         // Chuyển hướng về trang danh sách yêu cầu ăn trưa với thông báo thành công
-        return redirect()->route('admin')->with('success', 'Yêu cầu ăn trưa đã được lưu thành công.');
+        return redirect()->route('lunch_request.index')->with('success', 'Yêu cầu ăn trưa đã được lưu thành công.');
     }
 
     /**
@@ -59,12 +71,28 @@ class LunchRequestController extends Controller
     public function show($id)
     {
         //show the foods in the eatery
-        $lunch_request = LunchRequest::find($id);
-        $eatery = $lunch_request->eatery;
-        $foods = $lunch_request->eatery->foods;
-        return view('employee.showFoods', compact('lunch_request','eatery', 'foods'));
-    }
+        // $lunch_request = LunchRequest::find($id);
+        // $eatery = $lunch_request->eatery;
+        // $foods = $lunch_request->eatery->foods;
+        // return view('employee.showFoods', compact('lunch_request', 'eatery', 'foods'));
 
+        $lunchRequest = LunchRequest::findOrFail($id);
+        return view('lunch_request.show', compact('lunchRequest'));
+    }
+    public function updateStatus(Request $request, $id)
+    {
+        $lunchRequest = LunchRequest::findOrFail($id);
+
+        // Lấy trạng thái từ request và đảo ngược nó
+        $status = $request->input('status') == 'open' ? 'close' : 'open';
+
+        // Cập nhật trạng thái mới cho yêu cầu
+        $lunchRequest->update([
+            'status' => $status,
+        ]);
+
+        return redirect()->route('lunch_request.show', $id)->with('success', 'Yêu cầu đã được cập nhật!');
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -73,7 +101,9 @@ class LunchRequestController extends Controller
      */
     public function edit($id)
     {
-        //
+        $lunchRequest = LunchRequest::findOrFail($id);
+        $eateries = Eatery::all(); // Lấy danh sách các quán ăn
+        return view('lunch_request.edit', compact('lunchRequest', 'eateries'));
     }
 
     /**
@@ -85,8 +115,24 @@ class LunchRequestController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Điều chỉnh validation rule để phù hợp với định dạng của datetime-local
+        $request->validate([
+            'eatery_id' => 'required|exists:eateries,id',
+            'start_time' => 'required|date_format:Y-m-d\TH:i', // điều chỉnh định dạng
+            'notes' => 'nullable|string',
+        ]);
+
+        // Cập nhật yêu cầu ăn trong cơ sở dữ liệu
+        $lunchRequest = LunchRequest::findOrFail($id);
+        $lunchRequest->update([
+            'eatery_id' => $request->input('eatery_id'),
+            'start_time' => $request->input('start_time'), // Sử dụng đúng tên cột
+            'note' => $request->input('notes'), // Sử dụng đúng tên cột
+        ]);
+
+        return redirect()->route('lunch_request.index')->with('success', 'Lịch ăn đã được cập nhật thành công!');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -96,6 +142,7 @@ class LunchRequestController extends Controller
      */
     public function destroy($id)
     {
-        //
+        LunchRequest::destroy($id);
+        return redirect()->route('lunch_request.index')->with('success', 'Yêu cầu ăn trưa đã được xóa thành công.');
     }
 }

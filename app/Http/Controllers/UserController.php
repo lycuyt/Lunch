@@ -40,24 +40,6 @@ class UserController extends Controller
     {
         return view('auth.login');
     }
-
-    // public function login(Request $request)
-    // {
-    //     $credentials = $request->only('email', 'password');
-
-    //     if (Auth::attempt($credentials)) {
-    //         $user = Auth::user();
-
-    //         // Redirect based on role
-    //         if ($user->role === 'admin') {
-    //             return redirect()->intended('/admin');
-    //         } elseif ($user->role === 'employee') {
-    //             return redirect()->intended('/employee');
-    //         }
-    //     }
-
-    //     return redirect('/login')->with('error', 'Invalid credentials. Please try again.');
-    // }
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
