@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\DashBoardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -45,19 +46,11 @@ Route::middleware(['auth','role:admin' ])->group(function () {
 
 Route :: middleware(['auth','role:employee' ]) -> group ( function () {
     Route::get('/employee', [UserController::class, 'showEmployee'])->name('employee');
-    // Route::get('/employee/showFoods/{id}', [LunchRequestController::class, 'show'])->name('show');
     Route::resource('order', OrderController::class);
     // Route::get('/ordered', [UserController::class, 'showOrder'])->name('ordered');
-
-    Route::resource('lunch_request', LunchRequestController::class);    
+    // Route::get('/get-lunch-requests', [LunchRequestController::class, 'getLunchRequestsByDate']);
+    Route::get('/lunch-requests', [AjaxController::class, 'index']);
+    Route::get('/get-lunch-requests', [AjaxController::class, 'getLunchRequests']);
+    Route::post('/save-lunch-order', [AjaxController::class, 'saveLunchOrder']);
+  
 });
-
-// UPDATE 8/8/2024
-    // Route::get('/admin', [UserController::class, 'showAdmin'])->name('admin');
-    // Route::resource('admin/eatery', EateryController::class);
-
-        // Route::get('/admin', [UserController::class, 'showAdmin'])->name('admin');
-        // Route::resource('eatery', EateryController::class);
-        // Route::resource('food', FoodController::class);
-        // Route::resource('lunch_request', LunchRequestController::class);
-        // Route::get('/statistics', [StatisticsController::class, 'index']);

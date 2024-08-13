@@ -2,341 +2,207 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>NextFi | Dashboard</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/font-awesome/css/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/Ionicons/css/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/dist/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/dist/css/skins/_all-skins.min.css">
-    <!-- Morris chart -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/morris.js/morris.css">
-    <!-- jvectormap -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/jvectormap/jquery-jvectormap.css">
-    <!-- Date Picker -->
-    <link rel="stylesheet"
-        href="{{ asset('assets') }}/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/bootstrap-daterangepicker/daterangepicker.css">
-    <!-- bootstrap wysihtml5 - text editor -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
-
-
-    <!-- Google Font -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-
-    <!-- CSS for full calender -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
-    <!-- JS for jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!-- JS for full calender -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
-    <!-- fullCalendar -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/fullcalendar/dist/fullcalendar.min.css">
-    <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/fullcalendar/dist/fullcalendar.print.min.css"
-        media="print">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/dist/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-        folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/dist/css/skins/_all-skins.min.css">
-
-    <style>
-        section.content {
-            width: 70%;
-        }
-    </style>
+    <title>Lunch Requests Calendar</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body>
+    <div class="container">
+        <h1 class="text-center text-primary"><u>Lunch Requests Calendar</u></h1>
 
-    @include('layouts.header')
-    <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-            <!-- Sidebar user panel -->
-            <div class="user-panel">
-                <div class="pull-left image">
-                    <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
-                </div>
-                <div class="pull-left info">
-                    <p>Cam LY</p>
-                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                </div>
-            </div>
-            <!-- search form -->
-            <form action="#" method="get" class="sidebar-form">
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Search...">
-                    <span class="input-group-btn">
-                        <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i
-                                class="fa fa-search"></i>
+        <div id="calendar"></div>
+        <!-- Modal -->
+        <div class="modal fade" id="lunchRequestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Lunch Request Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
                         </button>
-                    </span>
-                </div>
-            </form>
-            <!-- /.search form -->
-            <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu" data-widget="tree">
-                <li class="header">MAIN NAVIGATION</li>
-
-                <li class="{{ Request::is('employee') ? 'active' : '' }}">
-                    <a href="{{ url('employee') }}">
-                        <i class="fa fa-dashboard"></i> <span>Đặt món</span>
-                    </a>
-                </li>
-
-                <li class="{{ Request::is('') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-th"></i> <span>Đã đặt</span>
-                    </a>
-                </li>
-            </ul>
-        </section>
-        <!-- /.sidebar -->
-    </aside>
-
-    {{-- end sidebar --}}
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-
-        </section>
-
-        <!-- Main content -->
-        <section class="content">
-            <div class="col-md-12 mx-5">
-                <div class="box box-primary">
-                    <div class="box-body no-padding">
-                        <!-- THE CALENDAR -->
-                        <div id="calendar"></div>
                     </div>
-                    <!-- /.box-body -->
+                    <div class="modal-body" id="modalBody">
+                        <!-- Content will be loaded here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
-                <!-- /. box -->
             </div>
+        </div>
 
-        </section>
-        <!-- /.content -->
+
+        <!-- Modal để điền số lượng món ăn, ghi chú và hình thức -->
+        <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderModalLabel">Order Food</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="orderForm">
+                            <div class="form-group">
+                                <label for="quantity">Quantity:</label>
+                                <input type="number" class="form-control" id="quantity" name="quantity" min="1"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="note">Note:</label>
+                                <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="orderType">Order Type:</label>
+                                <select class="form-control" id="orderType" name="orderType" required>
+                                    <option value="takeaway">Mua về</option>
+                                    <option value="eat-in">Ăn tại quán</option>
+                                </select>
+                            </div>
+
+                            <!-- Hidden fields -->
+                            <input type="hidden" id="foodId" name="foodId">
+                            <input type="hidden" id="lunchRequestId" name="lunchRequestId">
+                            <input type="hidden" id="userId" name="userId">
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveOrderBtn">Save Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 
     <script>
-        $(function() {
-            function init_events(ele) {
-                ele.each(function() {
-
-                    var eventObject = {
-                        title: $.trim($(this).text()) // use the element's text as the event title
-                    }
-
-                    // store the Event Object in the DOM element so we can get to it later
-                    $(this).data('eventObject', eventObject)
-
-                    // make the event draggable using jQuery UI
-                    $(this).draggable({
-                        zIndex: 1070,
-                        revert: true, // will cause the event to go back to its
-                        revertDuration: 0 //  original position after the drag
-                    })
-
-                })
-            }
-
-            init_events($('#external-events div.external-event'))
-
-            /* initialize the calendar
-             -----------------------------------------------------------------*/
-            //Date for the calendar events (dummy data)
-            var date = new Date()
-            var d = date.getDate(),
-                m = date.getMonth(),
-                y = date.getFullYear()
+        $(document).ready(function() {
             $('#calendar').fullCalendar({
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                buttonText: {
-                    today: 'today',
-                    month: 'month',
-                    week: 'week',
-                    day: 'day'
-                },
-                //Random default events
-                events: [{
-                        title: 'All Day Event',
-                        start: new Date(y, m, 1),
-                        backgroundColor: '#f56954', //red
-                        borderColor: '#f56954' //red
-                    },
-                    {
-                        title: 'Long Event',
-                        start: new Date(y, m, d - 5),
-                        end: new Date(y, m, d - 2),
-                        backgroundColor: '#f39c12', //yellow
-                        borderColor: '#f39c12' //yellow
-                    },
-                    {
-                        title: 'Meeting',
-                        start: new Date(y, m, d, 10, 30),
-                        allDay: false,
-                        backgroundColor: '#0073b7', //Blue
-                        borderColor: '#0073b7' //Blue
-                    },
-                    {
-                        title: 'Lunch',
-                        start: new Date(y, m, d, 12, 0),
-                        end: new Date(y, m, d, 14, 0),
-                        allDay: false,
-                        backgroundColor: '#00c0ef', //Info (aqua)
-                        borderColor: '#00c0ef' //Info (aqua)
-                    },
-                    {
-                        title: 'Birthday Party',
-                        start: new Date(y, m, d + 1, 19, 0),
-                        end: new Date(y, m, d + 1, 22, 30),
-                        allDay: false,
-                        backgroundColor: '#00a65a', //Success (green)
-                        borderColor: '#00a65a' //Success (green)
-                    },
-                    {
-                        title: 'Click for Google',
-                        start: new Date(y, m, 28),
-                        end: new Date(y, m, 29),
-                        url: 'http://google.com/',
-                        backgroundColor: '#3c8dbc', //Primary (light-blue)
-                        borderColor: '#3c8dbc' //Primary (light-blue)
-                    }
-                ],
                 editable: true,
-                droppable: true, // this allows things to be dropped onto the calendar !!!
-                drop: function(date, allDay) { // this function is called when something is dropped
+                selectable: true,
+                selectHelper: true,
+                dayClick: function(date) {
+                    var selectedDate = date.format('YYYY-MM-DD');
 
-                    // retrieve the dropped element's stored Event Object
-                    var originalEventObject = $(this).data('eventObject')
+                    $.ajax({
+                        url: '/get-lunch-requests',
+                        method: 'GET',
+                        data: {
+                            date: selectedDate
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            var modalBody = $('#modalBody');
+                            modalBody.empty(); // Xóa nội dung cũ
 
-                    // we need to copy it, so that multiple events don't have a reference to the same object
-                    var copiedEventObject = $.extend({}, originalEventObject)
+                            if (response.lunch_request) { // Chỉnh lại điều kiện kiểm tra
+                                var lunch_request = response.lunch_request;
+                                var eatery = response.eateries[
+                                0]; // Lấy đúng eatery (phần tử đầu tiên)
+                                var foods = response.foods;
+                                var orders = response.orders;
+                                var lunchRequestId = lunch_request[0].id;
 
-                    // assign it the date that was reported
-                    copiedEventObject.start = date
-                    copiedEventObject.allDay = allDay
-                    copiedEventObject.backgroundColor = $(this).css('background-color')
-                    copiedEventObject.borderColor = $(this).css('border-color')
+                                // Tạo nội dung hiển thị thời gian và món ăn
+                                var content = `
+                                    <p><strong>Eatery:</strong> ${eatery.name}</p>
+                                    <p><strong>Address:</strong> ${eatery.address}</p>
+                                    <p><strong>Time:</strong> ${moment(lunch_request.date).format('YYYY-MM-DD HH:mm:ss')}</p>
+                                    <p><strong>Food Items:</strong></p>
+                                    <ul>
+                                `;
+                                foods.forEach(function(food) {
+                                    content += `
+                                <li>
+                                    ${food.name} - ${food.price} VND
+                                    <button class="btn btn-primary order-button" 
+                                    data-food-id="${food.id}" 
+                                    data-lunch-request-id="${lunchRequestId}">Đặt món</button>
+                                </li>
+                                `;
+                                });
+                                content += '</ul>';
 
-                    // render the event on the calendar
-                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-                    $('#calendar').fullCalendar('renderEvent', copiedEventObject, true)
+                                // Hiển thị danh sách đơn hàng
+                                content += '<h5>Orders:</h5><ul>';
+                                orders.forEach(function(order) {
+                                    content += `
+                                        <li>
+                                            ${order.name} - ${order.quantity} - ${order.note} - ${order.method}
+                                            <button class="btn btn-warning edit-order" data-order-id="${order.id}">Edit</button>
+                                            <button class="btn btn-danger delete-order" data-order-id="${order.id}">Delete</button>
+                                        </li>
+                                    `;
+                                });
+                                content += '</ul>';
+                                modalBody.append(content);
+                            } else {
+                                modalBody.append('<p>No lunch requests for this date.</p>');
+                            }
 
-                    // is the "remove after drop" checkbox checked?
-                    if ($('#drop-remove').is(':checked')) {
-                        // if so, remove the element from the "Draggable Events" list
-                        $(this).remove()
-                    }
-
+                            $('#lunchRequestModal').modal('show');
+                        }
+                    });
                 }
-            })
+            });
 
-            /* ADDING EVENTS */
-            var currColor = '#3c8dbc' //Red by default
-            //Color chooser button
-            var colorChooser = $('#color-chooser-btn')
-            $('#color-chooser > li > a').click(function(e) {
-                e.preventDefault()
-                //Save color
-                currColor = $(this).css('color')
-                //Add color effect to button
-                $('#add-new-event').css({
-                    'background-color': currColor,
-                    'border-color': currColor
-                })
-            })
-            $('#add-new-event').click(function(e) {
-                e.preventDefault()
-                //Get value and make sure it is not null
-                var val = $('#new-event').val()
-                if (val.length == 0) {
-                    return
+            // Xử lý khi bấm nút "Đặt món"
+            $(document).on('click', '.order-button', function() {
+                var foodId = $(this).data('food-id');
+                var lunchRequestId = $(this).data('lunch-request-id');
+                var userId = $(this).data('user-id');
+
+                $('#foodId').val(foodId);
+                $('#lunchRequestId').val(lunchRequestId);
+                $('#orderModal').modal('show');
+            });
+        });
+
+        $('#saveOrderBtn').on('click', function() {
+            var orderData = {
+                foodId: $('#foodId').val(),
+                quantity: $('#quantity').val(),
+                note: $('#note').val(),
+                orderType: $('#orderType').val(),
+                lunchRequestId: $('#lunchRequestId').val(),
+                _token: $('meta[name="csrf-token"]').attr('content')
+                // userId: $('#userId').val(),
+            };
+            console.log(orderData);
+            $.ajax({
+                url: '/save-lunch-order',
+                method: 'POST',
+                data: orderData,
+                success: function(response) {
+                    // console.log(response);
+                    alert('Order saved successfully!');
+                    $('#orderModal').modal('hide');
+                    $('#foodId').val('');
+                    $('#quantity').val('');
+                    $('#note').val('');
+                    $('#orderType').val('');
+                    $('#lunchRequestId').val('');
+                },
+                error: function(xhr, status, error) {
+                    alert('Failed to save order.');
                 }
-
-                //Create events
-                var event = $('<div />')
-                event.css({
-                    'background-color': currColor,
-                    'border-color': currColor,
-                    'color': '#fff'
-                }).addClass('external-event')
-                event.html(val)
-                $('#external-events').prepend(event)
-
-                //Add draggable funtionality
-                init_events(event)
-
-                //Remove event from text input
-                $('#new-event').val('')
-            })
-        })
+            });
+        });
     </script>
 
-    <!-- jQuery 3 -->
-    <script src="{{ asset('assets') }}/bower_components/jquery/dist/jquery.min.js"></script>
-    <!-- jQuery UI 1.11.4 -->
-    <script src="{{ asset('assets') }}/bower_components/jquery-ui/jquery-ui.min.js"></script>
-    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
-        $.widget.bridge('uibutton', $.ui.button);
-    </script>
-    <!-- Bootstrap 3.3.7 -->
-    <script src="{{ asset('assets') }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- Morris.js charts -->
-    <script src="{{ asset('assets') }}/bower_components/raphael/raphael.min.js"></script>
-    <script src="{{ asset('assets') }}/bower_components/morris.js/morris.min.js"></script>
-    <!-- Sparkline -->
-    <script src="{{ asset('assets') }}/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
-    <!-- jvectormap -->
-    <script src="{{ asset('assets') }}/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-    <script src="{{ asset('assets') }}/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-    <!-- jQuery Knob Chart -->
-    <script src="{{ asset('assets') }}/bower_components/jquery-knob/dist/jquery.knob.min.js"></script>
-    <!-- daterangepicker -->
-    <script src="{{ asset('assets') }}/bower_components/moment/min/moment.min.js"></script>
-    <script src="{{ asset('assets') }}/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <!-- datepicker -->
-    <script src="{{ asset('assets') }}/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-    <!-- Bootstrap WYSIHTML5 -->
-    <script src="{{ asset('assets') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-    <!-- Slimscroll -->
-    <script src="{{ asset('assets') }}/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-    <!-- FastClick -->
-    <script src="{{ asset('assets') }}/bower_components/fastclick/lib/fastclick.js"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('assets') }}/dist/js/adminlte.min.js"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="{{ asset('assets') }}/dist/js/pages/dashboard.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('assets') }}/dist/js/demo.js"></script>
-
-    <script src="{{ asset('assets') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="{{ asset('assets') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-
-    <!-- fullCalendar -->
-    <script src="{{ asset('assets') }}/bower_components/moment/moment.js"></script>
-    <script src="{{ asset('assets') }}/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
-
-    @include('layouts.footer')
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 
 </html>

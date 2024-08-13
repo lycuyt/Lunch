@@ -23,7 +23,13 @@ class LunchRequestController extends Controller
 
         return view('lunch_request.index', compact('lunch_requests'));
     }
+    public function getLunchRequestsByDate(Request $request)
+    {
+        $date = $request->input('date');
+        $lunchRequests = LunchRequest::whereDate('start_time', $date)->get();
 
+        return view('lunch_requests.partials.requests_modal', compact('lunchRequests'));
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -79,20 +85,20 @@ class LunchRequestController extends Controller
         $lunchRequest = LunchRequest::findOrFail($id);
         return view('lunch_request.show', compact('lunchRequest'));
     }
-    public function updateStatus(Request $request, $id)
-    {
-        $lunchRequest = LunchRequest::findOrFail($id);
+    // public function updateStatus(Request $request, $id)
+    // {
+    //     $lunchRequest = LunchRequest::findOrFail($id);
 
-        // Lấy trạng thái từ request và đảo ngược nó
-        $status = $request->input('status') == 'open' ? 'close' : 'open';
+    //     // Lấy trạng thái từ request và đảo ngược nó
+    //     $status = $request->input('status') == 'open' ? 'close' : 'open';
 
-        // Cập nhật trạng thái mới cho yêu cầu
-        $lunchRequest->update([
-            'status' => $status,
-        ]);
+    //     // Cập nhật trạng thái mới cho yêu cầu
+    //     $lunchRequest->update([
+    //         'status' => $status,
+    //     ]);
 
-        return redirect()->route('lunch_request.show', $id)->with('success', 'Yêu cầu đã được cập nhật!');
-    }
+    //     return redirect()->route('lunch_request.show', $id)->with('success', 'Yêu cầu đã được cập nhật!');
+    // }
     /**
      * Show the form for editing the specified resource.
      *
@@ -126,7 +132,7 @@ class LunchRequestController extends Controller
         $lunchRequest = LunchRequest::findOrFail($id);
         $lunchRequest->update([
             'eatery_id' => $request->input('eatery_id'),
-            'start_time' => $request->input('start_time'), // Sử dụng đúng tên cột
+            'date' => $request->input('start_time'), // Sử dụng đúng tên cột
             'note' => $request->input('notes'), // Sử dụng đúng tên cột
         ]);
 

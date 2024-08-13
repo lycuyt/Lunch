@@ -10,7 +10,7 @@ class Eatery extends Model
 {
     use HasFactory;
     protected $table = 'eateries';
-    protected $fillable = ['name', 'address', 'phone'];
+    protected $fillable = ['id','name', 'address', 'phone'];
     public function foods()
     {
         return $this->hasMany(Food::class);
