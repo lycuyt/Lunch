@@ -6,6 +6,7 @@ use App\Models\Food;
 use Illuminate\Http\Request;
 use App\Models\LunchRequest;
 use App\Models\Order;
+use Carbon\Carbon;
 
 class AjaxController extends Controller
 {
@@ -23,21 +24,22 @@ class AjaxController extends Controller
         }
         return response()->json($events);
     }
-    
+
     public function getLunchRequests(Request $request)
     {
         $date = $request->input('date');
-        //lay ra thong tin cua quan an kem cac mon an cua quan do
-        $lunch_request = LunchRequest::whereDate('date', $date)->get();
+        $today = Carbon::today();
+        $lunch_request = LunchRequest::where('status', 'open')
+            ->whereDate('lunch_requests.date', $date)// Sử dụng whereDate để so sánh ngày
+            ->get();
         //select eateries.name from eateries join lunch_requests on eateries.id = lunch_requests.eatery_id with status = open
         $eateries = LunchRequest::join('eateries', 'lunch_requests.eatery_id', '=', 'eateries.id')
             ->whereDate('lunch_requests.date', $date)
-            ->andWhere('')
             ->where('lunch_requests.status', 'open')
             ->select('eateries.id', 'eateries.name', 'eateries.address')
             ->get();
 
-        
+
         //select foods.name, foods.price from foods join eateries on foods.eatery_id = eateries join lunch_requests on eateries.id = lunch_requests.eatery_id
         //where lunch_requests.date = $date
         $foods = Food::join('eateries', 'foods.eatery_id', '=', 'eateries.id')

@@ -266,87 +266,90 @@
         <!-- /.content -->
     </div>
     <script>
-        $(document).ready(function() {
-            $('#calendar').fullCalendar({
-                editable: true,
-                selectable: true,
-                selectHelper: true,
-                dayClick: function(date) {
-                    var selectedDate = date.format('YYYY-MM-DD');
+       $(document).ready(function() {
+    $('#calendar').fullCalendar({
+        editable: true,
+        selectable: true,
+        selectHelper: true,
+        dayClick: function(date) {
+            var selectedDate = date.format('YYYY-MM-DD');
 
-                    $.ajax({
-                        url: '/get-lunch-requests',
-                        method: 'GET',
-                        data: {
-                            date: selectedDate
-                        },
-                        success: function(response) {
-                            console.log(response);
-                            var modalBody = $('#modalBody');
-                            modalBody.empty(); // Xóa nội dung cũ
+            $.ajax({
+                url: '/get-lunch-requests',
+                method: 'GET',
+                data: {
+                    date: selectedDate
+                },
+                success: function(response) {
+                    console.log(response);
+                    var modalBody = $('#modalBody');
+                    modalBody.empty(); // Xóa nội dung cũ
 
-                            if (response.lunch_request) { // Chỉnh lại điều kiện kiểm tra
-                                var lunch_request = response.lunch_request;
-                                var eatery = response.eateries[
-                                    0]; // Lấy đúng eatery (phần tử đầu tiên)
-                                var foods = response.foods;
-                                var orders = response.orders;
-                                var lunchRequestId = lunch_request[0].id;
+                    if (response.lunch_request.length > 0) { // Kiểm tra nếu có yêu cầu
+                        var now = moment(); // Thời gian hiện tại
+                        var lunch_request = response.lunch_request[0]; // Giả sử bạn chỉ xử lý một yêu cầu cho ngày đó
+                        var eatery = response.eateries[0]; // Lấy đúng eatery (phần tử đầu tiên)
+                        var foods = response.foods;
+                        var orders = response.orders;
+                        var lunchRequestDate = moment(lunch_request.date); // Ngày của yêu cầu
 
-                                // Tạo nội dung hiển thị thời gian và món ăn
-                                var content = `
-                                    <p><strong>Eatery:</strong> ${eatery.name}</p>
-                                    <p><strong>Address:</strong> ${eatery.address}</p>
-                                    <p><strong>Time:</strong> ${moment(lunch_request.date).format('YYYY-MM-DD HH:mm:ss')}</p>
-                                    <p><strong>Food Items:</strong></p>
-                                    <ul>
-                                `;
-                                foods.forEach(function(food) {
-                                    content += `
-                                <li>
-                                    ${food.name} - ${food.price} VND
-                                    <button class="btn btn-primary order-button" 
+                        // Kiểm tra nếu yêu cầu còn mở
+                        var isOpen = lunch_request.status === 'open' && lunchRequestDate.isSameOrAfter(now, 'day');
+
+                        var content = `
+                            <p><strong>Eatery:</strong> ${eatery.name}</p>
+                            <p><strong>Address:</strong> ${eatery.address}</p>
+                            <p><strong>Time:</strong> ${lunch_request.date}</p>
+                            <p><strong>Food Items:</strong></p>
+                            <ul>
+                        `;
+
+                        foods.forEach(function(food) {
+                            content += `
+                            <li>
+                                ${food.name} - ${food.price} VND
+                                ${isOpen ? `<button class="btn btn-primary order-button" 
                                     data-food-id="${food.id}" 
-                                    data-lunch-request-id="${lunchRequestId}">Đặt món</button>
+                                    data-lunch-request-id="${lunch_request.id}">Đặt món</button>` : ''}
+                            </li>
+                            `;
+                        });
+                        content += '</ul>';
+
+                        // Hiển thị danh sách đơn hàng
+                        content += '<h5>Orders:</h5><ul>';
+                        orders.forEach(function(order) {
+                            content += `
+                                <li>
+                                    ${order.name} - ${order.quantity} - ${order.note} - ${order.method}
+                                    <button class="btn btn-warning edit-order" data-order-id="${order.id}">Edit</button>
+                                    <button class="btn btn-danger delete-order" data-order-id="${order.id}">Delete</button>
                                 </li>
-                                `;
-                                });
-                                content += '</ul>';
+                            `;
+                        });
+                        content += '</ul>';
+                        modalBody.append(content);
+                    } else {
+                        modalBody.append('<p>No lunch requests for this date.</p>');
+                    }
 
-                                // Hiển thị danh sách đơn hàng
-                                content += '<h5>Orders:</h5><ul>';
-                                orders.forEach(function(order) {
-                                    content += `
-                                        <li>
-                                            ${order.name} - ${order.quantity} - ${order.note} - ${order.method}
-                                            <button class="btn btn-warning edit-order" data-order-id="${order.id}">Edit</button>
-                                            <button class="btn btn-danger delete-order" data-order-id="${order.id}">Delete</button>
-                                        </li>
-                                    `;
-                                });
-                                content += '</ul>';
-                                modalBody.append(content);
-                            } else {
-                                modalBody.append('<p>No lunch requests for this date.</p>');
-                            }
-
-                            $('#lunchRequestModal').modal('show');
-                        }
-                    });
+                    $('#lunchRequestModal').modal('show');
                 }
             });
+        }
+    });
 
-            // Xử lý khi bấm nút "Đặt món"
-            $(document).on('click', '.order-button', function() {
-                var foodId = $(this).data('food-id');
-                var lunchRequestId = $(this).data('lunch-request-id');
-                var userId = $(this).data('user-id');
+    // Xử lý khi bấm nút "Đặt món"
+    $(document).on('click', '.order-button', function() {
+        var foodId = $(this).data('food-id');
+        var lunchRequestId = $(this).data('lunch-request-id');
 
-                $('#foodId').val(foodId);
-                $('#lunchRequestId').val(lunchRequestId);
-                $('#orderModal').modal('show');
-            });
-        });
+        $('#foodId').val(foodId);
+        $('#lunchRequestId').val(lunchRequestId);
+        $('#orderModal').modal('show');
+    });
+});
+
 
         $('#saveOrderBtn').on('click', function() {
             var orderData = {
