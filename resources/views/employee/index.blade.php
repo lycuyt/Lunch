@@ -104,8 +104,8 @@
                     </a>
                 </li>
 
-                <li class="{{ Request::is('') ? 'active' : '' }}">
-                    <a href="#">
+                <li class="{{ Request::is('show_orders') ? 'active' : '' }}">
+                    <a href="{{ url ('show_orders')}}">
                         <i class="fa fa-th"></i> <span>Đã đặt</span>
                     </a>
                 </li>

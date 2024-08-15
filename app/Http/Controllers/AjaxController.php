@@ -23,7 +23,7 @@ class AjaxController extends Controller
         }
         return response()->json($events);
     }
-
+    
     public function getLunchRequests(Request $request)
     {
         $date = $request->input('date');
@@ -32,9 +32,12 @@ class AjaxController extends Controller
         //select eateries.name from eateries join lunch_requests on eateries.id = lunch_requests.eatery_id with status = open
         $eateries = LunchRequest::join('eateries', 'lunch_requests.eatery_id', '=', 'eateries.id')
             ->whereDate('lunch_requests.date', $date)
+            ->andWhere('')
             ->where('lunch_requests.status', 'open')
             ->select('eateries.id', 'eateries.name', 'eateries.address')
             ->get();
+
+        
         //select foods.name, foods.price from foods join eateries on foods.eatery_id = eateries join lunch_requests on eateries.id = lunch_requests.eatery_id
         //where lunch_requests.date = $date
         $foods = Food::join('eateries', 'foods.eatery_id', '=', 'eateries.id')

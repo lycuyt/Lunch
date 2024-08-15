@@ -74,7 +74,7 @@ class EateryController extends Controller
      */
     public function edit($id)
     {
-        $eatery = Eatery::find($id)->first();
+        $eatery = Eatery::find($id)->first(); 
         return view('eatery.edit')->with('eatery',$eatery);
     }
 

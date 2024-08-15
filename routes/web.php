@@ -33,7 +33,7 @@ Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [StatisticsController::class, 'index'])->name('admin');
-    Route::resource('eatery', EateryController::class);
+    Route::resource('eatery', EateryController::class); 
     Route::resource('food', FoodController::class);
     Route::resource('lunch_request', LunchRequestController::class);
     Route::get('/statistics', [StatisticsController::class, 'index']);
@@ -59,4 +59,6 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
 
     // Route để xóa đơn hàng
     Route::delete('/delete-order/{id}', [AjaxController::class, 'deleteOrder'])->name('deleteOrder');
+
+    // Route::post('/create',[OrderController::class, 'store'])->name('order.store');
 });

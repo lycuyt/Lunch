@@ -28,7 +28,7 @@
                                 alt="User Image">
 
                             <p>
-                                Alexander Pierce - Web Developer
+                                Alexander Pierce
                                 <small>Member since Nov. 2012</small>
                             </p>
                         </li>
