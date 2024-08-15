@@ -50,11 +50,6 @@
           </a>
       </li>
 
-      <li class="{{ Request::is('statistics') ? 'active' : '' }}">
-          <a href="{{ url('statistics') }}">
-            <i class="fa fa-th"></i> <span>Thống kê</span>
-          </a>
-      </li>
     </ul>
   </section>
   <!-- /.sidebar -->

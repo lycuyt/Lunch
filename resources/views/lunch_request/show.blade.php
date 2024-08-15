@@ -23,12 +23,9 @@
     <!-- Nút để cập nhật trạng thái -->
     <form action="{{ route('lunch_request.update_status', $lunchRequest->id) }}" method="POST">
         @csrf
-        @method('PUT') <!-- Đây là cách để giả lập PUT method -->
-    
-        <!-- Input ẩn để lưu trạng thái hiện tại -->
-        <input type="hidden" name="status" value="{{ $lunchRequest->status }}">
-    
-        <!-- Nút để gửi form -->
+        @method('PUT')
+        
+        <!-- Nút để gửi form với trạng thái ngược lại -->
         <button type="submit" class="btn btn-primary">
             {{ $lunchRequest->status == 'open' ? 'Đóng yêu cầu' : 'Mở yêu cầu' }}
         </button>

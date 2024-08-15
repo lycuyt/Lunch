@@ -58,13 +58,13 @@ class UserController extends Controller
         ]);
     }
 
-    public function showAdmin()
-    {
-        $eateries = Eatery::all();
-        $lunchRequests = LunchRequest::orderBy('date', 'desc')->get();
-        // dd($eateries);  
-        return view('admin.index', compact('eateries', 'lunchRequests'));
-    }
+    // public function showAdmin()
+    // {
+    //     $eateries = Eatery::all();
+    //     $lunchRequests = LunchRequest::orderBy('date', 'desc')->get();
+    //     // dd($eateries);  
+    //     return view('admin.index', compact('eateries', 'lunchRequests'));
+    // }
     public function showEmployee()
     {
         $lunchRequests = LunchRequest::whereDate('date', Carbon::today())

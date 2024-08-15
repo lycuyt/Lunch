@@ -31,20 +31,19 @@ Route::post('/login', [UserController::class, 'login'])->name('login');
 
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-Route::middleware(['auth','role:admin' ])->group(function () {
-    Route::get('/admin', [UserController::class, 'showAdmin'])->name('admin');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin', [StatisticsController::class, 'index'])->name('admin');
     Route::resource('eatery', EateryController::class);
     Route::resource('food', FoodController::class);
     Route::resource('lunch_request', LunchRequestController::class);
     Route::get('/statistics', [StatisticsController::class, 'index']);
-    
-    Route::get('/lunch_request/{id}', 'LunchRequestController@show')->name('lunch_request.show');
-    Route::put('/lunch_request/{id}/update-status', 'LunchRequestController@updateStatus')->name('lunch_request.update_status');
 
+    Route::get('/lunch_request/{id}', 'LunchRequestController@show')->name('lunch_request.show');   
+    Route::put('/lunch_request/{id}/update-status', [LunchRequestController::class, 'updateStatus'])->name('lunch_request.update_status');
 
 });
 
-Route :: middleware(['auth','role:employee' ]) -> group ( function () {
+Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::get('/employee', [UserController::class, 'showEmployee'])->name('employee');
     Route::resource('order', OrderController::class);
     // Route::get('/ordered', [UserController::class, 'showOrder'])->name('ordered');
@@ -52,5 +51,12 @@ Route :: middleware(['auth','role:employee' ]) -> group ( function () {
     Route::get('/lunch-requests', [AjaxController::class, 'index']);
     Route::get('/get-lunch-requests', [AjaxController::class, 'getLunchRequests']);
     Route::post('/save-lunch-order', [AjaxController::class, 'saveLunchOrder']);
-  
+    
+    Route::get('/get-order/{id}', [AjaxController::class, 'getOrder'])->name('getOrder');
+
+    // Route để cập nhật thông tin đơn hàng
+    Route::put('/update-order/{id}', [AjaxController::class, 'updateOrder'])->name('updateOrder');
+
+    // Route để xóa đơn hàng
+    Route::delete('/delete-order/{id}', [AjaxController::class, 'deleteOrder'])->name('deleteOrder');
 });

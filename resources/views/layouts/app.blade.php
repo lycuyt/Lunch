@@ -32,6 +32,7 @@
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+ 
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     
@@ -99,5 +100,8 @@
 
 <script src="{{asset('assets')}}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets')}}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+ {{-- bar chart --}}
+ <script src="{{asset('assets')}}/bower_components/Flot/jquery.flot.categories.js"></script>
 </body>
 </html>

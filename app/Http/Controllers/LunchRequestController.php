@@ -85,20 +85,18 @@ class LunchRequestController extends Controller
         $lunchRequest = LunchRequest::findOrFail($id);
         return view('lunch_request.show', compact('lunchRequest'));
     }
-    // public function updateStatus(Request $request, $id)
-    // {
-    //     $lunchRequest = LunchRequest::findOrFail($id);
+    public function updateStatus(Request $request, $id)
+    {
+        $lunchRequest = LunchRequest::findOrFail($id);
 
-    //     // Lấy trạng thái từ request và đảo ngược nó
-    //     $status = $request->input('status') == 'open' ? 'close' : 'open';
+        // Lấy trạng thái từ request và đảo ngược nó
+        $lunchRequest->status = $lunchRequest->status == 'open' ? 'close' : 'open';
 
-    //     // Cập nhật trạng thái mới cho yêu cầu
-    //     $lunchRequest->update([
-    //         'status' => $status,
-    //     ]);
+        // Cập nhật trạng thái mới cho yêu cầu
+        $lunchRequest->save();
 
-    //     return redirect()->route('lunch_request.show', $id)->with('success', 'Yêu cầu đã được cập nhật!');
-    // }
+        return redirect()->route('lunch_request.index')->with('success', 'Trạng thái yêu cầu đã được cập nhật.');
+    }
     /**
      * Show the form for editing the specified resource.
      *

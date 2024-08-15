@@ -29,10 +29,11 @@ class AjaxController extends Controller
         $date = $request->input('date');
         //lay ra thong tin cua quan an kem cac mon an cua quan do
         $lunch_request = LunchRequest::whereDate('date', $date)->get();
-        //select eateries.name from eateries join lunch_requests on eateries.id = lunch_requests.eatery_id
-        $eateries = LunchRequest::join('eateries', 'eateries.id', '=', 'lunch_requests.eatery_id')
-            ->whereDate('date', $date)
-            ->select('eateries.name', 'eateries.address')
+        //select eateries.name from eateries join lunch_requests on eateries.id = lunch_requests.eatery_id with status = open
+        $eateries = LunchRequest::join('eateries', 'lunch_requests.eatery_id', '=', 'eateries.id')
+            ->whereDate('lunch_requests.date', $date)
+            ->where('lunch_requests.status', 'open')
+            ->select('eateries.id', 'eateries.name', 'eateries.address')
             ->get();
         //select foods.name, foods.price from foods join eateries on foods.eatery_id = eateries join lunch_requests on eateries.id = lunch_requests.eatery_id
         //where lunch_requests.date = $date
@@ -54,7 +55,7 @@ class AjaxController extends Controller
             'lunch_request' => $lunch_request,
             'eateries' => $eateries,
             'foods' => $foods,
-            'orders' => $orders 
+            'orders' => $orders
         ]);
     }
 
@@ -75,5 +76,47 @@ class AjaxController extends Controller
         $order->save();
 
         return response()->json(['success' => true]);
+    }
+    public function getOrder($id)
+    {
+        $order = Order::join('foods', 'orders.food_id', '=', 'foods.id')
+            ->where('orders.id', $id)
+            ->select('orders.id', 'foods.name', 'orders.quantity', 'orders.note', 'orders.method', 'orders.status', 'orders.lunch_request_id')
+            ->first();
+
+        if ($order) {
+            return response()->json(['success' => true, 'order' => $order]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Order not found.'], 404);
+        }
+    }
+
+    // 
+    public function updateOrder(Request $request, $id)
+    {
+        $order = Order::find($id);
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found.']);
+        }
+
+        $order->quantity = $request->input('quantity');
+        $order->note = $request->input('note');
+        $order->method = $request->input('orderType');
+        $order->lunch_request_id = $request->input('lunchRequestId');
+        $order->save();
+
+        return response()->json(['success' => true]);
+    }
+    public function deleteOrder($id)
+    {
+        $order = Order::find($id);
+
+        if ($order) {
+            $order->delete();
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Order not found.'], 404);
+        }
     }
 }
