@@ -60,6 +60,7 @@
     section.content {
         width: 50%;
     }
+
     .datepicker.datepicker-inline {
         display: none !important;
     }
@@ -75,25 +76,14 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+                    <img src="https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg"
+                        class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Cam LY</p>
+                    <p>{{ auth()->user()->name }} </p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
-            <!-- search form -->
-            <form action="#" method="get" class="sidebar-form">
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Search...">
-                    <span class="input-group-btn">
-                        <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i
-                                class="fa fa-search"></i>
-                        </button>
-                    </span>
-                </div>
-            </form>
-            <!-- /.search form -->
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">MAIN NAVIGATION</li>
@@ -105,7 +95,7 @@
                 </li>
 
                 <li class="{{ Request::is('show_orders') ? 'active' : '' }}">
-                    <a href="{{ url ('show_orders')}}">
+                    <a href="{{ url('show_orders') }}">
                         <i class="fa fa-th"></i> <span>Đã đặt</span>
                     </a>
                 </li>
@@ -132,7 +122,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Lunch Request Details</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Yêu cầu ăn trưa chi tiết</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -141,7 +131,7 @@
                                 <!-- Content will be loaded here -->
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                             </div>
                         </div>
                     </div>
@@ -149,12 +139,12 @@
 
 
                 <!-- Modal để điền số lượng món ăn, ghi chú và hình thức -->
-                <div class="modal fade" id="orderModal" tabindex="-1" role="dialog"
-                    aria-labelledby="orderModalLabel" aria-hidden="true">
+                <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+                    aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="orderModalLabel">Order Food</h5>
+                                <h5 class="modal-title" id="orderModalLabel">Đặt món ăn</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -162,19 +152,19 @@
                             <div class="modal-body">
                                 <form id="orderForm">
                                     <div class="form-group">
-                                        <label for="quantity">Quantity:</label>
+                                        <label for="quantity">Số lượng:</label>
                                         <input type="number" class="form-control" id="quantity" name="quantity"
                                             min="1" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="note">Note:</label>
+                                        <label for="note">Ghi chú:</label>
                                         <textarea class="form-control" id="note" name="note" rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label for="orderType">Order Type:</label>
+                                        <label for="orderType">Phương thức:</label>
                                         <select class="form-control" id="orderType" name="orderType" required>
-                                            <option value="takeaway">Mua về</option>
-                                            <option value="eat-in">Ăn tại quán</option>
+                                            <option value="Mua về">Mua về</option>
+                                            <option value="Ăn tại quán">Ăn tại quán</option>
                                         </select>
                                     </div>
 
@@ -186,8 +176,8 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" id="saveOrderBtn">Save Order</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                <button type="button" class="btn btn-primary" id="saveOrderBtn">Lưu</button>
                             </div>
                         </div>
                     </div>
@@ -199,7 +189,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editOrderModalLabel">Edit Order</h5>
+                                <h5 class="modal-title" id="editOrderModalLabel">Sửa yêu cầu</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -208,28 +198,28 @@
                                 <form id="editOrderForm">
                                     <input type="hidden" id="editOrderId" name="orderId">
                                     <div class="form-group">
-                                        <label for="editQuantity">Quantity:</label>
+                                        <label for="editQuantity">Số lượng:</label>
                                         <input type="number" class="form-control" id="editQuantity" name="quantity"
                                             min="1" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="editNote">Note:</label>
+                                        <label for="editNote">Ghi chú:</label>
                                         <textarea class="form-control" id="editNote" name="note" rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label for="editOrderType">Order Type:</label>
+                                        <label for="editOrderType">Phương thức:</label>
                                         <select class="form-control" id="editOrderType" name="orderType" required>
-                                            <option value="takeaway">Mua về</option>
-                                            <option value="eat-in">Ăn tại quán</option>
+                                            <option value="Mua về">Mua về</option>
+                                            <option value="Ăn tại quán">Ăn tại quán</option>
                                         </select>
                                     </div>
                                     <input type="hidden" id="editLunchRequestId" name="lunchRequestId">
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" id="saveEditOrderBtn">Save
-                                    Changes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                <button type="button" class="btn btn-primary" id="saveEditOrderBtn">Lưu thay
+                                    đổi</button>
                             </div>
                         </div>
                     </div>
@@ -241,18 +231,17 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="deleteOrderModalLabel">Confirm Delete</h5>
+                                <h5 class="modal-title" id="deleteOrderModalLabel">Xác nhận xóa</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p>Are you sure you want to delete this order?</p>
+                                <p>Bạn có chắc muốn xóa không?</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-danger"
-                                    id="confirmDeleteOrderBtn">Delete</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-danger" id="confirmDeleteOrderBtn">Xóa</button>
                             </div>
                         </div>
                     </div>
@@ -266,37 +255,42 @@
         <!-- /.content -->
     </div>
     <script>
-       $(document).ready(function() {
-    $('#calendar').fullCalendar({
-        editable: true,
-        selectable: true,
-        selectHelper: true,
-        dayClick: function(date) {
-            var selectedDate = date.format('YYYY-MM-DD');
+        $(document).ready(function() {
+            $('#calendar').fullCalendar({
+                editable: true,
+                selectable: true,
+                selectHelper: true,
+                dayClick: function(date) {
+                    var selectedDate = date.format('YYYY-MM-DD');
 
-            $.ajax({
-                url: '/get-lunch-requests',
-                method: 'GET',
-                data: {
-                    date: selectedDate
-                },
-                success: function(response) {
-                    console.log(response);
-                    var modalBody = $('#modalBody');
-                    modalBody.empty(); // Xóa nội dung cũ
+                    $.ajax({
+                        url: '/get-lunch-requests',
+                        method: 'GET',
+                        data: {
+                            date: selectedDate
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            var modalBody = $('#modalBody');
+                            modalBody.empty(); // Xóa nội dung cũ
 
-                    if (response.lunch_request.length > 0) { // Kiểm tra nếu có yêu cầu
-                        var now = moment(); // Thời gian hiện tại
-                        var lunch_request = response.lunch_request[0]; // Giả sử bạn chỉ xử lý một yêu cầu cho ngày đó
-                        var eatery = response.eateries[0]; // Lấy đúng eatery (phần tử đầu tiên)
-                        var foods = response.foods;
-                        var orders = response.orders;
-                        var lunchRequestDate = moment(lunch_request.date); // Ngày của yêu cầu
+                            if (response.lunch_request.length >
+                                0) { // Kiểm tra nếu có yêu cầu
+                                var now = moment(); // Thời gian hiện tại
+                                var lunch_request = response.lunch_request[
+                                    0]; // Giả sử bạn chỉ xử lý một yêu cầu cho ngày đó
+                                var eatery = response.eateries[
+                                    0]; // Lấy đúng eatery (phần tử đầu tiên)
+                                var foods = response.foods;
+                                var orders = response.orders;
+                                var lunchRequestDate = moment(lunch_request
+                                    .date); // Ngày của yêu cầu
 
-                        // Kiểm tra nếu yêu cầu còn mở
-                        var isOpen = lunch_request.status === 'open' && lunchRequestDate.isSameOrAfter(now, 'day');
+                                // Kiểm tra nếu yêu cầu còn mở
+                                var isOpen = (lunch_request.status === 'open' &&
+                                    lunchRequestDate.isSameOrAfter(now, 'day')) ;
 
-                        var content = `
+                                var content = `
                             <p><strong>Eatery:</strong> ${eatery.name}</p>
                             <p><strong>Address:</strong> ${eatery.address}</p>
                             <p><strong>Time:</strong> ${lunch_request.date}</p>
@@ -304,51 +298,51 @@
                             <ul>
                         `;
 
-                        foods.forEach(function(food) {
-                            content += `
+                                foods.forEach(function(food) {
+                                    content += `
                             <li>
                                 ${food.name} - ${food.price} VND
-                                ${isOpen ? `<button class="btn btn-primary order-button" 
-                                    data-food-id="${food.id}" 
-                                    data-lunch-request-id="${lunch_request.id}">Đặt món</button>` : ''}
+                                ${isOpen ? `<button class="btn btn-primary order-button"    
+                                            data-food-id="${food.id}" 
+                                            data-lunch-request-id="${lunch_request.id}">Đặt món</button>` : ''}
                             </li>
                             `;
-                        });
-                        content += '</ul>';
+                                });
+                                content += '</ul>';
 
-                        // Hiển thị danh sách đơn hàng
-                        content += '<h5>Orders:</h5><ul>';
-                        orders.forEach(function(order) {
-                            content += `
+                                // Hiển thị danh sách đơn hàng
+                                content += '<h5>Orders:</h5><ul>';
+                                orders.forEach(function(order) {
+                                    content += `
                                 <li>
                                     ${order.name} - ${order.quantity} - ${order.note} - ${order.method}
                                     <button class="btn btn-warning edit-order" data-order-id="${order.id}">Edit</button>
                                     <button class="btn btn-danger delete-order" data-order-id="${order.id}">Delete</button>
                                 </li>
                             `;
-                        });
-                        content += '</ul>';
-                        modalBody.append(content);
-                    } else {
-                        modalBody.append('<p>No lunch requests for this date.</p>');
-                    }
+                                });
+                                content += '</ul>';
+                                modalBody.append(content);
+                            } else {
+                                modalBody.append('<p>Hôm nay không có yêu cầu ăn.</p>');
+                            }
 
-                    $('#lunchRequestModal').modal('show');
+                            $('#lunchRequestModal').modal('show');
+                        }
+                    });
                 }
             });
-        }
-    });
 
-    // Xử lý khi bấm nút "Đặt món"
-    $(document).on('click', '.order-button', function() {
-        var foodId = $(this).data('food-id');
-        var lunchRequestId = $(this).data('lunch-request-id');
+            // Xử lý khi bấm nút "Đặt món"
+            $(document).on('click', '.order-button', function() {
+                var foodId = $(this).data('food-id');
+                var lunchRequestId = $(this).data('lunch-request-id');
 
-        $('#foodId').val(foodId);
-        $('#lunchRequestId').val(lunchRequestId);
-        $('#orderModal').modal('show');
-    });
-});
+                $('#foodId').val(foodId);
+                $('#lunchRequestId').val(lunchRequestId);
+                $('#orderModal').modal('show');
+            });
+        });
 
 
         $('#saveOrderBtn').on('click', function() {
@@ -368,7 +362,7 @@
                 data: orderData,
                 success: function(response) {
                     // console.log(response);
-                    alert('Order saved successfully!');
+                    alert('Lưu yêu cầu thành công!');
                     $('#orderModal').modal('hide');
                     $('#foodId').val('');
                     $('#quantity').val('');
@@ -377,7 +371,7 @@
                     $('#lunchRequestId').val('');
                 },
                 error: function(xhr, status, error) {
-                    alert('Failed to save order.');
+                    alert('Lưu yêu cầu thất bại.');
                 }
             });
         });
@@ -404,12 +398,12 @@
 
                         $('#editOrderModal').modal('show');
                     } else {
-                        alert('Failed to load order details.');
+                        alert('Lỗi load dữ liệu.');
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error('AJAX Error:', error);
-                    alert('Failed to load order details.');
+                    alert('Lỗi load dữ liệu.');
                 }
             });
 
@@ -437,7 +431,7 @@
                         $('#editOrderModal').modal('hide');
                         $('#calendar').fullCalendar('refetchEvents'); // Cập nhật lại lịch
                     } else {
-                        alert('Failed to update order.');
+                        alert('Sửa không thành công.');
                     }
                 }
             });
@@ -467,12 +461,12 @@
                             $('#deleteOrderModal').modal('hide');
                             $('#calendar').fullCalendar('refetchEvents'); // Cập nhật lại lịch
                         } else {
-                            alert('Failed to delete order.');
+                            alert('Xóa yêu cầu không thành công.');
                         }
                     },
                     error: function(xhr, status, error) {
                         console.log(xhr.responseText); // Xem chi tiết lỗi
-                        alert('Failed to delete order.');
+                        alert('Xóa yêu cầu không thành công.');
                     }
                 });
             });

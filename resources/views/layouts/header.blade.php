@@ -18,25 +18,23 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{ asset('assets') }}/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                        <span class="hidden-xs">Alexander Pierce</span>
+                        <img src="https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg" class="user-image" alt="User Image">
+                        <span class="hidden-xs">{{auth()->user()->name }} </span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="{{ asset('assets') }}/dist/img/user2-160x160.jpg" class="img-circle"
+                            <img src="https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg" class="img-circle"
                                 alt="User Image">
 
                             <p>
-                                Alexander Pierce
-                                <small>Member since Nov. 2012</small>
+                                {{auth()->user()->name }} 
+                                {{-- <small>Member since Nov. 2012</small> --}}
                             </p>
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
-                            </div>
+                            
                             <div class="pull-right">
                                 {{-- <a href="{{route('logout')}} " class="btn btn-default btn-flat">Sign out</a> --}}
                                 <form class="d-flex px-5" action="/logout" method="POST">

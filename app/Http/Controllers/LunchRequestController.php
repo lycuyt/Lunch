@@ -54,7 +54,23 @@ class LunchRequestController extends Controller
             'start_time' => 'required|date',
             'notes' => 'nullable|string',
         ]);
-
+    
+        // Lấy ngày từ thời gian bắt đầu ăn
+        $start_date = \Carbon\Carbon::parse($request->input('start_time'))->toDateString();
+        $today = \Carbon\Carbon::today()->toDateString();
+    
+        // Kiểm tra nếu ngày được chọn thuộc về quá khứ
+        if ($start_date < $today) {
+            return redirect()->back()->withErrors(['error' => 'Không thể tạo lịch ăn cho ngày đã qua.']);
+        }
+    
+        // Kiểm tra xem đã có yêu cầu ăn nào trong ngày này chưa
+        $existingLunchRequest = LunchRequest::whereDate('date', $start_date)->first();
+    
+        if ($existingLunchRequest) {
+            return redirect()->back()->withErrors(['error' => 'Đã có một yêu cầu ăn trong ngày này.']);
+        }
+    
         // Tạo một yêu cầu ăn trưa mới
         LunchRequest::create([
             'eatery_id' => $request->input('eatery_id'),
@@ -63,8 +79,7 @@ class LunchRequestController extends Controller
             'note' => $request->input('notes'),
             'status' => 'open',
         ]);
-
-        // Chuyển hướng về trang danh sách yêu cầu ăn trưa với thông báo thành công
+    
         return redirect()->route('lunch_request.index')->with('success', 'Yêu cầu ăn trưa đã được lưu thành công.');
     }
 

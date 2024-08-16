@@ -53,9 +53,7 @@ class UserController extends Controller
             }
         }
 
-        return redirect()->back()->withErrors([
-            'email' => 'These credentials do not match our records.',
-        ]);
+        return redirect()->back()->withErrors(['email' => 'Thông tin tài khoản hoặc mật khẩu không chính xác.']);
     }
 
     // public function showAdmin()

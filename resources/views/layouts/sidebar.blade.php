@@ -1,13 +1,16 @@
 <aside class="main-sidebar">
+  <style>
+    
+  </style>
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
     <!-- Sidebar user panel -->
     <div class="user-panel">
       <div class="pull-left image">
-        <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+        <img src="https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg" class="img-circle" alt="User Image">
       </div>
       <div class="pull-left info">
-        <p>Cam LY</p>
+      <p>{{auth()->user()->name }} </p>
         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
       </div>
     </div>

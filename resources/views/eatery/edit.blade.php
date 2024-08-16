@@ -7,15 +7,15 @@
         @method('PUT')
         <div class="form-group">
             <label for="name">Tên quán ăn</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Nhập tên quán ăn" value="{{$eatery->name}} ">
+            <input type="text" class="form-control" id="name" name="name" placeholder="Nhập tên quán ăn" value="{{$eatery->name}} " required>
         </div>
         <div class="form-group">
             <label for="address">Địa chỉ</label>
-            <input type="text" class="form-control" id="address" name="address" placeholder="Nhập địa chỉ" value="{{$eatery->address}}" >
+            <input type="text" class="form-control" id="address" name="address" placeholder="Nhập địa chỉ" value="{{$eatery->address}}" required>
         </div>
         <div class="form-group">
             <label for="phone">Số điện thoại</label>
-            <input type="text" class="form-control" id="phone" name="phone" placeholder="Nhập số điện thoại" value="{{$eatery->phone}}" >
+            <input type="text" class="form-control" id="phone" name="phone" placeholder="Nhập số điện thoại" value="{{$eatery->phone}}" required>
         </div>
         <button type="submit" class="btn btn-primary">Sửa</button>
         <a href="{{ route('eatery.index') }}" class="btn btn-secondary">Hủy</a>

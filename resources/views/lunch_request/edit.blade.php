@@ -8,7 +8,7 @@
         
         <div class="form-group">
             <label for="eatery">Chọn quán ăn</label>
-            <select class="form-control" id="eatery" name="eatery_id">
+            <select class="form-control" id="eatery" name="eatery_id" required>
                 <option value="">Chọn quán ăn</option>
                 @foreach ($eateries as $eatery)
                     <option value="{{ $eatery->id }}" {{ $lunchRequest->eatery_id == $eatery->id ? 'selected' : '' }}>
@@ -26,7 +26,7 @@
 
         <div class="form-group">
             <label for="notes">Ghi chú</label>
-            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Nhập ghi chú">{{ $lunchRequest->note }}</textarea>
+            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Nhập ghi chú" required>{{ $lunchRequest->note }}</textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">Cập nhật</button>
