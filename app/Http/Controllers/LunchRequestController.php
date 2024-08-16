@@ -18,8 +18,8 @@ class LunchRequestController extends Controller
     {
         // lay ra cac yeu cau an trua cua user hien tai
         $lunch_requests = LunchRequest::where('user_id', auth()->user()->id)
-            ->orderBy('created_at', 'desc')  // Sắp xếp theo ngày tạo từ mới nhất đến cũ nhất
-            ->paginate(7);  // Phân trang với 7 yêu cầu trên mỗi trang
+            ->orderBy('created_at', 'desc')  
+            ->paginate(7);  
 
         return view('lunch_request.index', compact('lunch_requests'));
     }

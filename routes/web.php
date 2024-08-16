@@ -61,4 +61,5 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::delete('/delete-order/{id}', [AjaxController::class, 'deleteOrder'])->name('deleteOrder');
 
     // Route::post('/create',[OrderController::class, 'store'])->name('order.store');
+    Route:: get('/show-orders', [AjaxController::class, 'showOrders']);
 });

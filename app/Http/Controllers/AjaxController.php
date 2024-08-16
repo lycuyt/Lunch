@@ -24,7 +24,15 @@ class AjaxController extends Controller
         }
         return response()->json($events);
     }
+    public function showOrders()
+    {
+        $orders = Order::where('user_id', auth()->user()->id)   
+        ->orderBy('created_at', 'desc')
+        ->paginate(7);
 
+        
+        return view('employee.show-orders', compact('orders'));
+    }
     public function getLunchRequests(Request $request)
     {
         $date = $request->input('date');
