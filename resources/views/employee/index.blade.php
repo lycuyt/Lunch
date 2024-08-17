@@ -58,7 +58,7 @@
 </head>
 <style>
     section.content {
-        width: 50%;
+        width: 60%;
     }
 
     .datepicker.datepicker-inline {
@@ -247,89 +247,112 @@
                     </div>
                 </div>
 
-
-
             </div>
 
         </section>
         <!-- /.content -->
     </div>
+
+
+
     <script>
+        function loadLunchRequestDetails(lunchRequestId) {
+            $.ajax({
+                url: '/get-lunch-requests',
+                method: 'GET',
+                data: {
+                    id: lunchRequestId // Gửi ID của yêu cầu để lấy chi tiết
+                },
+                success: function(response) {
+                    console.log(response);
+                    var modalBody = $('#modalBody');
+                    modalBody.empty(); // Xóa nội dung cũ
+
+                    if (response.lunch_request.length > 0) { // Kiểm tra nếu có yêu cầu
+                        var now = moment(); // Thời gian hiện tại
+                        var lunch_request = response.lunch_request[0]; // Giả sử bạn chỉ xử lý một yêu cầu
+                        var eatery = response.eateries[0]; // Lấy đúng eatery (phần tử đầu tiên)
+                        var foods = response.foods;
+                        var orders = response.orders;
+                        var lunchRequestDate = moment(lunch_request.date); // Ngày của yêu cầu
+
+                        // Kiểm tra nếu yêu cầu còn mở
+                        var isOpen = (lunch_request.status === 'open' && lunchRequestDate.isSameOrAfter(now,
+                            'day'));
+
+                        var content = `
+                    <p><strong>Eatery:</strong> ${eatery.name}</p>
+                    <p><strong>Address:</strong> ${eatery.address}</p>
+                    <p><strong>Time:</strong> ${lunch_request.date}</p>
+                    <p><strong>Food Items:</strong></p>
+                    <ul>
+                `;
+
+                        foods.forEach(function(food) {
+                            content += `
+                        <li>
+                            ${food.name} - ${food.price} VND
+                            ${isOpen ? `<button class="btn btn-primary order-button" data-food-id="${food.id}" data-lunch-request-id="${lunch_request.id}">Đặt món</button>` : ''}
+                        </li>
+                    `;
+                        });
+                        content += '</ul>';
+
+                        // Hiển thị danh sách đơn hàng
+                        content += '<h5>Orders:</h5><ul>';
+                        orders.forEach(function(order) {
+                            content += `
+                        <li>
+                            ${order.name} - ${order.quantity} - ${order.note} - ${order.method}
+                            ${isOpen ? `<button class="btn btn-warning edit-order" data-order-id="${order.id}" data-lunch-request-id="${lunch_request.id}">Edit</button>`: ''}
+                            ${isOpen ? `<button class="btn btn-danger delete-order" data-order-id="${order.id}"data-lunch-request-id="${lunch_request.id}">Delete</button>`: ''}
+                        </li>
+                    `;
+                        });
+                        content += '</ul>';
+                        modalBody.append(content);
+                        $('#lunchRequestModal').modal('show');
+                    } else {
+                        $('#lunchRequestModal').modal('hide');
+                    }
+                }
+            });
+        }
+
         $(document).ready(function() {
+            // Initialize the calendar with events from API
             $('#calendar').fullCalendar({
                 editable: true,
                 selectable: true,
                 selectHelper: true,
-                dayClick: function(date) {
-                    var selectedDate = date.format('YYYY-MM-DD');
-
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                buttonText: {
+                    today: 'today',
+                    month: 'month',
+                    week: 'week',
+                    day: 'day'
+                },
+                events: function(start, end, timezone, callback) {
                     $.ajax({
-                        url: '/get-lunch-requests',
-                        method: 'GET',
-                        data: {
-                            date: selectedDate
+                        url: '/lunch-requests', // Đường dẫn đến endpoint API của bạn
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(events) {
+                            callback(events); // Hiển thị sự kiện trên lịch
                         },
-                        success: function(response) {
-                            console.log(response);
-                            var modalBody = $('#modalBody');
-                            modalBody.empty(); // Xóa nội dung cũ
-
-                            if (response.lunch_request.length >
-                                0) { // Kiểm tra nếu có yêu cầu
-                                var now = moment(); // Thời gian hiện tại
-                                var lunch_request = response.lunch_request[
-                                    0]; // Giả sử bạn chỉ xử lý một yêu cầu cho ngày đó
-                                var eatery = response.eateries[
-                                    0]; // Lấy đúng eatery (phần tử đầu tiên)
-                                var foods = response.foods;
-                                var orders = response.orders;
-                                var lunchRequestDate = moment(lunch_request
-                                    .date); // Ngày của yêu cầu
-
-                                // Kiểm tra nếu yêu cầu còn mở
-                                var isOpen = (lunch_request.status === 'open' &&
-                                    lunchRequestDate.isSameOrAfter(now, 'day')) ;
-
-                                var content = `
-                            <p><strong>Eatery:</strong> ${eatery.name}</p>
-                            <p><strong>Address:</strong> ${eatery.address}</p>
-                            <p><strong>Time:</strong> ${lunch_request.date}</p>
-                            <p><strong>Food Items:</strong></p>
-                            <ul>
-                        `;
-
-                                foods.forEach(function(food) {
-                                    content += `
-                            <li>
-                                ${food.name} - ${food.price} VND
-                                ${isOpen ? `<button class="btn btn-primary order-button"    
-                                            data-food-id="${food.id}" 
-                                            data-lunch-request-id="${lunch_request.id}">Đặt món</button>` : ''}
-                            </li>
-                            `;
-                                });
-                                content += '</ul>';
-
-                                // Hiển thị danh sách đơn hàng
-                                content += '<h5>Orders:</h5><ul>';
-                                orders.forEach(function(order) {
-                                    content += `
-                                <li>
-                                    ${order.name} - ${order.quantity} - ${order.note} - ${order.method}
-                                    <button class="btn btn-warning edit-order" data-order-id="${order.id}">Edit</button>
-                                    <button class="btn btn-danger delete-order" data-order-id="${order.id}">Delete</button>
-                                </li>
-                            `;
-                                });
-                                content += '</ul>';
-                                modalBody.append(content);
-                            } else {
-                                modalBody.append('<p>Hôm nay không có yêu cầu ăn.</p>');
-                            }
-
-                            $('#lunchRequestModal').modal('show');
+                        error: function(xhr, status, error) {
+                            console.log('Error loading events:', error);
                         }
                     });
+                },
+                eventClick: function(event, jsEvent, view) { // Sự kiện khi nhấp vào một sự kiện
+                    var lunchRequestId = event.id; // Lấy ID của yêu cầu ăn uống từ sự kiện
+
+                    loadLunchRequestDetails(lunchRequestId);
                 }
             });
 
@@ -343,7 +366,6 @@
                 $('#orderModal').modal('show');
             });
         });
-
 
         $('#saveOrderBtn').on('click', function() {
             var orderData = {
@@ -362,13 +384,16 @@
                 data: orderData,
                 success: function(response) {
                     // console.log(response);
-                    alert('Lưu yêu cầu thành công!');
+                    // alert('Lưu yêu cầu thành công!');
                     $('#orderModal').modal('hide');
                     $('#foodId').val('');
                     $('#quantity').val('');
                     $('#note').val('');
                     $('#orderType').val('');
                     $('#lunchRequestId').val('');
+
+                    loadLunchRequestDetails(orderData.lunchRequestId);
+
                 },
                 error: function(xhr, status, error) {
                     alert('Lưu yêu cầu thất bại.');
@@ -427,46 +452,70 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        alert('Order updated successfully!');
+                        // alert('Order updated successfully!');
                         $('#editOrderModal').modal('hide');
-                        $('#calendar').fullCalendar('refetchEvents'); // Cập nhật lại lịch
+
+                        // Call the function to reload the lunch request details
+                        loadLunchRequestDetails(orderData.lunchRequestId);
                     } else {
                         alert('Sửa không thành công.');
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                    alert('Sửa không thành công.');
                 }
             });
         });
-        $(document).on('click', '.delete-order', function() {
-            var orderId = $(this).data('order-id');
-            $('#confirmDeleteOrderBtn').data('order-id', orderId);
-            $('#deleteOrderModal').modal('show');
-        });
+
 
         $(document).ready(function() {
-            // Thiết lập CSRF Token cho tất cả các yêu cầu AJAX
+            // Set up CSRF Token for all AJAX requests
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
 
+            // Click event for delete buttons
+            $(document).on('click', '.delete-order', function() {
+                var orderId = $(this).data('order-id');
+                var lunchRequestId = $(this).data(
+                'lunch-request-id'); // Ensure this is set on the delete button
+
+                console.log('Order ID:', orderId);
+                console.log('Lunch Request ID:', lunchRequestId);
+
+                // Set data attributes for the confirm delete button and show the modal
+                $('#confirmDeleteOrderBtn').data('order-id', orderId);
+                $('#confirmDeleteOrderBtn').data('lunch-request-id', lunchRequestId);
+                $('#deleteOrderModal').modal('show');
+            });
+
+            // Click event for confirm delete button
             $('#confirmDeleteOrderBtn').on('click', function() {
                 var orderId = $(this).data('order-id');
+                var lunchRequestId = $(this).data('lunch-request-id'); // Retrieve lunchRequestId
+
+                console.log('Confirming delete for Order ID:', orderId);
+                console.log('Associated Lunch Request ID:', lunchRequestId);
+
+                // Perform delete operation
                 $.ajax({
                     url: '/delete-order/' + orderId,
                     method: 'DELETE',
                     success: function(response) {
                         if (response.success) {
-                            alert('Order deleted successfully!');
                             $('#deleteOrderModal').modal('hide');
-                            $('#calendar').fullCalendar('refetchEvents'); // Cập nhật lại lịch
+                            loadLunchRequestDetails(
+                            lunchRequestId); // Refresh the lunch request details
                         } else {
-                            alert('Xóa yêu cầu không thành công.');
+                            alert('Failed to delete the order.');
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.log(xhr.responseText); // Xem chi tiết lỗi
-                        alert('Xóa yêu cầu không thành công.');
+                        console.error('AJAX Error:', error);
+                        alert('Failed to delete the order.');
                     }
                 });
             });

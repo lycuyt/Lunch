@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Eatery;
 use App\Models\Food;
 use Illuminate\Http\Request;
 use App\Models\LunchRequest;
@@ -12,65 +13,72 @@ class AjaxController extends Controller
 {
     public function index()
     {
-        $lunch_requests = LunchRequest::all();
-        // Đây là nơi bạn có thể cấu hình sự kiện cho FullCalendar
+        $lunch_requests = LunchRequest::where('status', 'open')->get();
+
+        // Cấu hình sự kiện cho FullCalendar
         $events = [];
         foreach ($lunch_requests as $request) {
             $events[] = [
-                'title' => 'Lunch Request',
+                'title' => $request->eatery->name, // Hiển thị tên quán ăn
                 'start' => $request->date,
-                'id' => $request->id
+                'id' => $request->id,
+                'eatery_name' => $request->eatery->name, // Đảm bảo tên quán ăn có trong dữ liệu sự kiện
             ];
         }
+
         return response()->json($events);
     }
+
+
     public function showOrders()
     {
-        $orders = Order::where('user_id', auth()->user()->id)   
-        ->orderBy('created_at', 'desc')
-        ->paginate(7);
+        $orders = Order::where('user_id', auth()->user()->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(7);
 
-        
+
         return view('employee.show-orders', compact('orders'));
     }
     public function getLunchRequests(Request $request)
     {
-        $date = $request->input('date');
-        $today = Carbon::today();
-        $lunch_request = LunchRequest::where('status', 'open')
-            ->whereDate('lunch_requests.date', $date)// Sử dụng whereDate để so sánh ngày
-            ->get();
-        //select eateries.name from eateries join lunch_requests on eateries.id = lunch_requests.eatery_id with status = open
-        $eateries = LunchRequest::join('eateries', 'lunch_requests.eatery_id', '=', 'eateries.id')
-            ->whereDate('lunch_requests.date', $date)
-            ->where('lunch_requests.status', 'open')
-            ->select('eateries.id', 'eateries.name', 'eateries.address')
+        $lunchRequestId = $request->input('id'); // Lấy id của lunch_request từ request
+
+        // Tìm yêu cầu ăn uống theo ID
+        $lunch_request = LunchRequest::where('id', $lunchRequestId)
+            ->where('status', 'open')
+            ->first();
+
+        if (!$lunch_request) {
+            return response()->json([
+                'message' => 'Lunch request not found'
+            ], 404);
+        }
+
+        // Tìm eatery liên quan đến yêu cầu ăn uống
+        $eatery = Eatery::where('id', $lunch_request->eatery_id)
+            ->select('id', 'name', 'address')
+            ->first();
+
+        // Tìm danh sách foods liên quan đến eatery
+        $foods = Food::where('eatery_id', $eatery->id)
+            ->select('id', 'name', 'price')
             ->get();
 
-
-        //select foods.name, foods.price from foods join eateries on foods.eatery_id = eateries join lunch_requests on eateries.id = lunch_requests.eatery_id
-        //where lunch_requests.date = $date
-        $foods = Food::join('eateries', 'foods.eatery_id', '=', 'eateries.id')
-            ->join('lunch_requests', 'eateries.id', '=', 'lunch_requests.eatery_id')
-            ->whereDate('lunch_requests.date', $date)
-            ->select('foods.id', 'foods.name', 'foods.price')
-            ->get();
-
-        //select * from orders join foods on orders.food_id = foods.id join lunch_requests on orders.lunch_request_id = lunch_requests.id
-        //where lunch_requests.date = $date and orders.user_id = auth()->user()->id
-        $orders = Order::join('foods', 'orders.food_id', '=', 'foods.id')
-            ->join('lunch_requests', 'orders.lunch_request_id', '=', 'lunch_requests.id')
-            ->whereDate('lunch_requests.date', $date)
-            ->where('orders.user_id', auth()->user()->id)
+        // Tìm danh sách orders liên quan đến yêu cầu ăn uống và người dùng hiện tại
+        $orders = Order::where('lunch_request_id', $lunchRequestId)
+            ->where('user_id', auth()->user()->id)
+            ->join('foods', 'orders.food_id', '=', 'foods.id')
             ->select('orders.id', 'foods.name', 'orders.quantity', 'orders.note', 'orders.method', 'orders.status')
             ->get();
+
         return response()->json([
-            'lunch_request' => $lunch_request,
-            'eateries' => $eateries,
+            'lunch_request' => [$lunch_request],
+            'eateries' => [$eatery],
             'foods' => $foods,
             'orders' => $orders
         ]);
     }
+
 
 
 

@@ -64,12 +64,7 @@ class LunchRequestController extends Controller
             return redirect()->back()->withErrors(['error' => 'Không thể tạo lịch ăn cho ngày đã qua.']);
         }
     
-        // Kiểm tra xem đã có yêu cầu ăn nào trong ngày này chưa
-        $existingLunchRequest = LunchRequest::whereDate('date', $start_date)->first();
-    
-        if ($existingLunchRequest) {
-            return redirect()->back()->withErrors(['error' => 'Đã có một yêu cầu ăn trong ngày này.']);
-        }
+        
     
         // Tạo một yêu cầu ăn trưa mới
         LunchRequest::create([

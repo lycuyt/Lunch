@@ -26,8 +26,8 @@ use App\Http\Controllers\StatisticsController;
 Route::get('/register', [UserController::class, 'showRegistrationForm']);
 Route::post('/register', [UserController::class, 'register'])->name('register');
 
-Route::get('/login', [UserController::class, 'showLoginForm']);
-Route::post('/login', [UserController::class, 'login'])->name('login');
+Route::get('/', [UserController::class, 'showLoginForm']);
+Route::post('/', [UserController::class, 'login'])->name('login');
 
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 

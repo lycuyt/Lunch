@@ -34,7 +34,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect('/login')->with('success', 'Registration successful! Please log in.');
+        return redirect('/')->with('success', 'Registration successful! Please log in.');
     }
     public function showLoginForm()
     {
@@ -76,7 +76,7 @@ class UserController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect('/');
     }
     // show order by user
     public function showOrder()
