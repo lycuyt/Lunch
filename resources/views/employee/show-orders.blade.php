@@ -109,40 +109,35 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-
-        </section>
-
-        <!-- Main content -->
-        <div class="container">
-            <h2 class="text-center">Order List</h2>
-            <div class="row justify-content-center">
-                <div class="col-md-10">
+            <h2 class="text-center">Danh sách các món đã đặt</h2>
+            <div class="container">
+                <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Orders of {{ auth()->user()->name }}</h3>
+                            <h3 class="panel-title">Món ăn của {{ auth()->user()->name }}</h3>
                         </div>
                         <div class="panel-body">
                             <table class="table table-striped table-bordered text-center">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Lunch Request</th>
-                                        <th>Food Name</th>
-                                        <th>Quantity</th>
-                                        <th>Notes</th>
-                                        <th>Ordered At</th>
+                                        <th>Yêu cầu ăn</th>
+                                        <th>Tên món</th>
+                                        <th>Số lượng</th>
+                                        <th>Ghi chú</th>
+                                        <th>Thời gian đặt</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($orders as $order)
-                                    <tr>
-                                        <td>{{ $order->id }}</td>
-                                        <td>{{ $order->lunchRequest->name }}</td>
-                                        <td>{{ $order->food->name }}</td>
-                                        <td>{{ $order->quantity }}</td>
-                                        <td>{{ $order->note }}</td>
-                                        <td>{{ $order->created_at }}</td>
-                                    </tr>
+                                    @foreach ($orders as $order)
+                                        <tr>
+                                            <td>{{ $order->id }}</td>
+                                            <td>{{ $order->lunchRequest->eatery->name }}</td>
+                                            <td>{{ $order->food->name }}</td>
+                                            <td>{{ $order->quantity }}</td>
+                                            <td>{{ $order->note }}</td>
+                                            <td>{{ $order->created_at }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -153,8 +148,12 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- /.content -->
+    </div>
+    </section>
+
+    <!-- Main content -->
+
+    <!-- /.content -->
     </div>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 

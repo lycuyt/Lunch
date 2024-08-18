@@ -43,6 +43,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Ảnh</th>
                                     <th>Tên món ăn</th>
                                     <th>Giá</th>
                                     <th>Quán ăn</th>
@@ -56,6 +57,10 @@
                                     <tr>
                                         <th scope="row">
                                             {{ $index + 1 + ($foods->currentPage() - 1) * $foods->perPage() }}</th>
+                                        <td>
+                                            <img src="{{ asset('images/' . $item->image) }}" alt="{{ $item->name }}"
+                                                style="width: 100px">
+                                        </td>
                                         <td>{{ $item->name }} </td>
                                         <td>{{ number_format($item->price, 2) }} VND</td>
                                         <td>{{ $item->eatery->name }}</td>

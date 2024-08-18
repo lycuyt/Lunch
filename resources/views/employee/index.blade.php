@@ -281,16 +281,17 @@
                             'day'));
 
                         var content = `
-                    <p><strong>Eatery:</strong> ${eatery.name}</p>
-                    <p><strong>Address:</strong> ${eatery.address}</p>
-                    <p><strong>Time:</strong> ${lunch_request.date}</p>
-                    <p><strong>Food Items:</strong></p>
+                    <p><strong>Quán ăn:</strong> ${eatery.name}</p>
+                    <p><strong>Địa chỉ:</strong> ${eatery.address}</p>
+                    <p><strong>Thời gian:</strong> ${lunch_request.date}</p>
+                    <p><strong>Món ăn:</strong></p>
                     <ul>
                 `;
 
                         foods.forEach(function(food) {
                             content += `
                         <li>
+                            <img src="{{asset('images')}}/${food.image}" alt="${food.name}" style="width: 50px; height: 50px; margin-right: 10px;">
                             ${food.name} - ${food.price} VND
                             ${isOpen ? `<button class="btn btn-primary order-button" data-food-id="${food.id}" data-lunch-request-id="${lunch_request.id}">Đặt món</button>` : ''}
                         </li>
@@ -299,11 +300,11 @@
                         content += '</ul>';
 
                         // Hiển thị danh sách đơn hàng
-                        content += '<h5>Orders:</h5><ul>';
+                        content += '<h5>Đã đặt:</h5><ul>';
                         orders.forEach(function(order) {
                             content += `
                         <li>
-                            ${order.name} - ${order.quantity} - ${order.note} - ${order.method}
+                            ${order.name} -SL: ${order.quantity} -Ghi chú: ${order.note} - ${order.method}
                             ${isOpen ? `<button class="btn btn-warning edit-order" data-order-id="${order.id}" data-lunch-request-id="${lunch_request.id}">Edit</button>`: ''}
                             ${isOpen ? `<button class="btn btn-danger delete-order" data-order-id="${order.id}"data-lunch-request-id="${lunch_request.id}">Delete</button>`: ''}
                         </li>

@@ -1,6 +1,16 @@
 <aside class="main-sidebar">
   <style>
-    
+    .main-sidebar {
+      position: fixed; /* Đảm bảo sidebar cố định bên cạnh màn hình */
+      height: 100%; /* Chiều cao của sidebar bằng 100% chiều cao của cửa sổ trình duyệt */
+      overflow-y: auto; /* Thêm thanh cuộn dọc nếu nội dung dài hơn chiều cao màn hình */
+    }
+
+    /* Đảm bảo rằng nội dung chính cũng có chiều cao tối thiểu bằng với chiều cao của sidebar */
+    .content-wrapper {
+      min-height: 100vh; /* Đặt chiều cao tối thiểu cho nội dung trang */
+      margin-left: 230px; /* Tương ứng với chiều rộng của sidebar để tránh nội dung bị chồng lên */
+    }
   </style>
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
@@ -10,21 +20,11 @@
         <img src="https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg" class="img-circle" alt="User Image">
       </div>
       <div class="pull-left info">
-      <p>{{auth()->user()->name }} </p>
+        <p>{{ auth()->user()->name }}</p>
         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
       </div>
     </div>
-    <!-- search form -->
-    <form action="#" method="get" class="sidebar-form">
-      <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Search...">
-        <span class="input-group-btn">
-              <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-              </button>
-        </span>
-      </div>
-    </form>
-    <!-- /.search form -->
+    
     <!-- sidebar menu: : style can be found in sidebar.less -->
     <ul class="sidebar-menu" data-widget="tree">
       <li class="header">MAIN NAVIGATION</li>
@@ -52,8 +52,9 @@
             <i class="fa fa-th"></i> <span>Lên lịch ăn</span>
           </a>
       </li>
-
     </ul>
   </section>
   <!-- /.sidebar -->
 </aside>
+
+

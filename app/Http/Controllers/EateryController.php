@@ -14,9 +14,9 @@ class EateryController extends Controller
      */
     public function index()
     {
-        $eateries = Eatery::paginate(7); 
+        $eateries = Eatery::paginate(7);
         // dd($eateries);
-        return view('eatery.index',[
+        return view('eatery.index', [
             'eateries' => $eateries
         ]);
     }
@@ -28,7 +28,7 @@ class EateryController extends Controller
      */
     public function create()
     {
-        return view('eatery.create');   
+        return view('eatery.create');
     }
 
     /**
@@ -43,12 +43,17 @@ class EateryController extends Controller
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5048',
         ]);
-
+        $generatedImageName = 'image' . time() . '-'
+            . $request->name . '.'
+            . $request->image->extension();
+        $request->image->move(public_path('images'), $generatedImageName);
         $eatery = Eatery::create([
             'name' => $request->input('name'),
             'address' => $request->input('address'),
             'phone' => $request->input('phone'),
+            'image' => $generatedImageName,
         ]);
 
         $eatery->save();
@@ -74,8 +79,8 @@ class EateryController extends Controller
      */
     public function edit($id)
     {
-        $eatery = Eatery::find($id)->first(); 
-        return view('eatery.edit')->with('eatery',$eatery);
+        $eatery = Eatery::findOrFail($id);
+        return view('eatery.edit')->with('eatery', $eatery);
     }
 
     /**
@@ -87,11 +92,28 @@ class EateryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $eatery = Eatery::where('id',$id)->update([
-            'name' => $request->input('name'),
-            'address' => $request->input('address'),
-            'phone' => $request->input('phone'),
+        $request->validate([
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5048', // Image is optional
         ]);
+
+        $eatery = Eatery::findOrFail($id);
+
+        // Only update the image if a new one is uploaded
+        if ($request->hasFile('image')) {
+            $generatedImageName = 'image' . time() . '-' . $request->name . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $generatedImageName);
+            $eatery->image = $generatedImageName;
+        }
+
+        $eatery->name = $request->input('name');
+        $eatery->address = $request->input('address');
+        $eatery->phone = $request->input('phone');
+
+        $eatery->save();
+
         return redirect('/eatery')->with('success', 'Eatery has been updated');
     }
 
@@ -105,6 +127,6 @@ class EateryController extends Controller
     {
         $eatery = Eatery::find($id);
         $eatery->delete();
-        return redirect('/eatery')->with('success', 'Eatery has been deleted');  
+        return redirect('/eatery')->with('success', 'Eatery has been deleted');
     }
 }

@@ -17,7 +17,7 @@
                 </div>
             @endif
 
-            <form action="/food" method="POST">
+            <form action="/food" method="POST"  enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">
@@ -46,7 +46,10 @@
                         @endforeach
                     </select>
                 </div>
-
+                <div class="form-group">
+                    <label for="image">Ảnh món ăn</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                </div>
                 <button type="submit" class="btn btn-primary">Thêm</button>
                 <a href="{{ route('food.index') }}" class="btn btn-secondary">Hủy</a>
             </form>

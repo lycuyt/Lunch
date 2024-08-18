@@ -43,6 +43,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Ảnh</th>
                                     <th>Tên quán ăn</th>
                                     <th>Địa chỉ</th>
                                     <th>Số điện thoại</th>
@@ -56,6 +57,10 @@
                                     <tr>
                                         <th scope="row">
                                             {{ $index + 1 + ($eateries->currentPage() - 1) * $eateries->perPage() }}</th>
+                                        <td>
+                                            <img src="{{ asset('images/' . $item->image) }}" alt="{{ $item->name }}"
+                                                style="width: 100px">
+                                        </td>
                                         <td>{{ $item->name }} </td>
                                         <td>{{ $item->address }}</td>
                                         <td>{{ $item->phone }}</td>

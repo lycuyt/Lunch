@@ -11,7 +11,7 @@
         </div>
     @endif
 
-    <form action="/food/{{$food->id}}" method="POST">
+    <form action="/food/{{$food->id}}" method="POST"  enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -43,7 +43,15 @@
                 @endforeach
             </select>
         </div>
-
+        <div class="form-group">
+            <label for="image">Ảnh món ăn</label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+            @if ($food->image)
+                <div class="mt-2">
+                    <img src="{{ asset('images/' . $food->image) }}" alt="Current Image" style="max-width: 200px;">
+                </div>
+            @endif
+        </div>
         <button type="submit" class="btn btn-primary">Lưu</button>
         <a href="{{ route('food.index') }}" class="btn btn-secondary">Hủy</a>
     </form>

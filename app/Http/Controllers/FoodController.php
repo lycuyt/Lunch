@@ -38,26 +38,37 @@ class FoodController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'eatery_id' => 'required|exists:eateries,id',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'price' => 'required|numeric|min:0',
+        'eatery_id' => 'required|exists:eateries,id', 
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5048', // Nullable image
+    ]);
 
-        // Tạo mới món ăn
-        Food::create([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'eatery_id' => $request->input('eatery_id'),
-        ]);
+    $generatedImageName = null;
 
-        // Chuyển hướng về trang danh sách món ăn với thông báo thành công
-        return redirect()->route('food.index')
-                         ->with('success', 'Món ăn đã được thêm thành công.');
+    if ($request->hasFile('image')) {
+        $generatedImageName = 'image' . time() . '-'
+            . $request->name . '.'
+            . $request->image->extension();
+        $request->image->move(public_path('images'), $generatedImageName);
     }
+
+    // Tạo mới món ăn
+    Food::create([
+        'name' => $request->input('name'),
+        'description' => $request->input('description'),
+        'price' => $request->input('price'),
+        'eatery_id' => $request->input('eatery_id'),
+        'image' => $generatedImageName,
+    ]);
+
+    // Chuyển hướng về trang danh sách món ăn với thông báo thành công
+    return redirect()->route('food.index')
+                     ->with('success', 'Món ăn đã được thêm thành công.');
+}
 
     /**
      * Display the specified resource.
@@ -100,17 +111,28 @@ class FoodController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'eatery_id' => 'required|exists:eateries,id',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5048',
         ]);
 
         // Cập nhật món ăn
         $food = Food::findOrFail($id);
-        $food->update([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'eatery_id' => $request->input('eatery_id'),
-        ]);
 
+        if ($request->hasFile('image')) {
+            $generatedImageName = 'image' . time() . '-' . $request->name . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $generatedImageName);
+            $food->image = $generatedImageName;
+        }
+        // $food->update([
+        //     'name' => $request->input('name'),
+        //     'description' => $request->input('description'),
+        //     'price' => $request->input('price'),
+        //     'eatery_id' => $request->input('eatery_id'),
+        // ]);
+        $food->name = $request->input('name');
+        $food->description = $request->input('description');
+        $food->price = $request->input('price');
+        $food->eatery_id = $request->input('eatery_id');
+        $food->save();
         // Chuyển hướng về trang danh sách món ăn với thông báo thành công
         return redirect()->route('food.index')
                          ->with('success', 'Món ăn đã được cập nhật thành công.');

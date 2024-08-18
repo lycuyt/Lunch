@@ -34,7 +34,7 @@ class AjaxController extends Controller
     {
         $orders = Order::where('user_id', auth()->user()->id)
             ->orderBy('created_at', 'desc')
-            ->paginate(7);
+            ->paginate(10);
 
 
         return view('employee.show-orders', compact('orders'));
@@ -61,14 +61,14 @@ class AjaxController extends Controller
 
         // Tìm danh sách foods liên quan đến eatery
         $foods = Food::where('eatery_id', $eatery->id)
-            ->select('id', 'name', 'price')
+            ->select('id', 'name', 'price', 'image')
             ->get();
 
         // Tìm danh sách orders liên quan đến yêu cầu ăn uống và người dùng hiện tại
         $orders = Order::where('lunch_request_id', $lunchRequestId)
             ->where('user_id', auth()->user()->id)
             ->join('foods', 'orders.food_id', '=', 'foods.id')
-            ->select('orders.id', 'foods.name', 'orders.quantity', 'orders.note', 'orders.method', 'orders.status')
+            ->select('orders.id', 'foods.name', 'orders.quantity', 'orders.note', 'orders.method', 'orders.status','foods.image')
             ->get();
 
         return response()->json([

@@ -37,7 +37,7 @@
                     <div class="icon">
                         <i class="ion ion-bag"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    
                 </div>
             </div>
             <!-- ./col -->
@@ -52,7 +52,7 @@
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    
                 </div>
             </div>
             <!-- ./col -->
@@ -67,7 +67,7 @@
                     <div class="icon">
                         <i class="ion ion-person-add"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    
                 </div>
             </div>
             <!-- ./col -->
@@ -82,89 +82,43 @@
                     <div class="icon">
                         <i class="ion ion-pie-graph"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    
                 </div>
             </div>
             <!-- ./col -->
         </div>
-    </div>
-    {{-- Món ăn --}}
-    <div class="container-fulid ">
-        <div class="row my-5">
-            <div class="col">
-                <h3 class="fs-4 mb-3">Anh em ăn những gì trong tuần</h3>
-                {{-- <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col" width="50">#</th>
-                            <th scope="col">Tên món</th>
-                            <th scope="col">Tên quán ăn</th>
-                            <th scope="col">Giá bán</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php $index = 1; @endphp
-                        @foreach ($foods_weekly as $item)
-                            <tr>
-                                <th scope="row">{{ $index++ }}</th>
-                                <td>{{ $item->food_name }}</td>
-                                <td>{{ $item->eatery_name }}</td>
-                                <td>{{ $item->food_price }} VND</td>
-                            </tr>
-                        @endforeach
-
-
-                    </tbody>
-                </table> --}}
+        <div class="row">
+            <div class="row">
                 <div class="col">
-                    <canvas id="foodsWeeklyChart" width="100" height="200"></canvas>
+                    <h3 class="fs-4 mb-3">Anh em ăn những gì trong tuần</h3>
+                    <div class="col">
+                        <canvas id="foodsWeeklyChart" width="100" height="200"></canvas>
+                    </div>
                 </div>
-            </div>
-            <div class="col mx-3">
-                <h3 class="fs-4 mb-3">Những quán anh em hay đi ăn</h3>
-                {{-- <table class="table bg-white rounded shadow-sm  table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col" width="50">#</th>
-                            <th scope="col">Tên quán</th>
-                            <th scope="col">Địa chỉ quán</th>
-                            <th scope="col">Số lần đến ăn</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php $index = 1; @endphp
-                        @foreach ($eateries_weekly as $item)
-                            <tr>
-                                <th scope="row">{{ $index++ }}</th>
-                                <td>{{ $item->eatery_name }}</td>
-                                <td>{{ $item->eatery_address }}</td>
-                                <td>{{ $item->visit_count }}</td>
-                            </tr>
-                        @endforeach
-
-                    </tbody>
-                </table> --}}
                 <div class="col mx-3">
-                    {{-- <h3 class="fs-4 mb-3">Những quán anh em hay đi ăn</h3> --}}
-                    <canvas id="eateriesWeeklyChart" class="chart-size"></canvas>
+                    <h3 class="fs-4 mb-3">Những quán anh em hay đi ăn</h3>
+                    
+                    <div class="col mx-3">
+                        <canvas id="eateriesWeeklyChart" class="chart-size"></canvas>
+                    </div>
+    
                 </div>
-
             </div>
+    
+            <div class="row my-5">
+                <div class="col-md-6">
+                    <h3 class="fs-4 mb-3">Số tiền của từng người trong tuần</h3>
+                    <canvas id="totalMoneyPerUserChart"></canvas>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="fs-4 mb-3">Số tiền trung bình buổi trưa của từng người</h3>
+                    <canvas id="averageMoneyPerUserChart"></canvas>
+                </div>
+            </div>
+    
         </div>
-
-        <div class="row my-5">
-            <div class="col-md-6">
-                <h3 class="fs-4 mb-3">Số tiền của từng người trong tuần</h3>
-                <canvas id="totalMoneyPerUserChart"></canvas>
-            </div>
-            <div class="col-md-6">
-                <h3 class="fs-4 mb-3">Số tiền trung bình buổi trưa của từng người</h3>
-                <canvas id="averageMoneyPerUserChart"></canvas>
-            </div>
-        </div>
-
-
     </div>
+    
     <script>
         var ctx = document.getElementById('foodsWeeklyChart').getContext('2d');
 
