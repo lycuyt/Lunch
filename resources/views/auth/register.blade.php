@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Registration Page</title>
+    <title>NextFi</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
@@ -33,11 +33,11 @@
 <body class="hold-transition register-page">
     <div class="register-box">
         <div class="register-logo">
-            <a href="{{ asset('assets') }}/index2.html"><b>Admin</b>LTE</a>
+            <a href="{{ asset('assets') }}/index2.html"><b>NextFi</b>LTE</a>
         </div>
 
         <div class="register-box-body">
-            <p class="login-box-msg">Register a new membership</p>
+            <p class="login-box-msg">Đăng ký thành viên</p>
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>

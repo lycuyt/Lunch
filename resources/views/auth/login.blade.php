@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Log in</title>
+    <title>NextFi</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
@@ -33,11 +33,11 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ asset('assets') }}/index2.html"><b>Admin</b>LTE</a>
+            <a href="{{ asset('assets') }}/index2.html"><b>NextFi</b>LTE</a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
-            <p class="login-box-msg">Sign in to start your session</p>
+            <p class="login-box-msg">Đăng nhập</p>
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -81,12 +81,12 @@
             </form>
 
             <div class="social-auth-links text-center">
-                <p>- or -</p>
-                <a href="{{ route('register') }}" class="btn btn-success btn-block"><b>Register</b> New Account</a>
+                <p>- hoặc -</p>
+                <a href="{{ route('register') }}" class="btn btn-success btn-block"><b>Đăng ký</b> Tài khoản mới</a>
             </div>
             <!-- /.social-auth-links -->
 
-            <p class="text-center">If you don't have an account, <a href="{{ route('register') }}">register here</a></p>
+            <p class="text-center">Nếu bạn chưa có tài khoản, <a href="{{ route('register') }}">Đăng ký ngay</a></p>
 
         </div>
         <!-- /.login-box-body -->

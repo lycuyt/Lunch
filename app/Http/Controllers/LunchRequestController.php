@@ -18,8 +18,8 @@ class LunchRequestController extends Controller
     {
         // lay ra cac yeu cau an trua cua user hien tai
         $lunch_requests = LunchRequest::where('user_id', auth()->user()->id)
-            ->orderBy('created_at', 'desc')  
-            ->paginate(7);  
+            ->orderBy('created_at', 'desc')
+            ->paginate(7);
 
         return view('lunch_request.index', compact('lunch_requests'));
     }
@@ -54,18 +54,18 @@ class LunchRequestController extends Controller
             'start_time' => 'required|date',
             'notes' => 'nullable|string',
         ]);
-    
+
         // Lấy ngày từ thời gian bắt đầu ăn
         $start_date = \Carbon\Carbon::parse($request->input('start_time'))->toDateString();
         $today = \Carbon\Carbon::today()->toDateString();
-    
+
         // Kiểm tra nếu ngày được chọn thuộc về quá khứ
         if ($start_date < $today) {
             return redirect()->back()->withErrors(['error' => 'Không thể tạo lịch ăn cho ngày đã qua.']);
         }
-    
-        
-    
+
+
+
         // Tạo một yêu cầu ăn trưa mới
         LunchRequest::create([
             'eatery_id' => $request->input('eatery_id'),
@@ -74,7 +74,7 @@ class LunchRequestController extends Controller
             'note' => $request->input('notes'),
             'status' => 'open',
         ]);
-    
+
         return redirect()->route('lunch_request.index')->with('success', 'Yêu cầu ăn trưa đã được lưu thành công.');
     }
 
@@ -86,15 +86,23 @@ class LunchRequestController extends Controller
      */
     public function show($id)
     {
-        //show the foods in the eatery
-        // $lunch_request = LunchRequest::find($id);
-        // $eatery = $lunch_request->eatery;
-        // $foods = $lunch_request->eatery->foods;
-        // return view('employee.showFoods', compact('lunch_request', 'eatery', 'foods'));
-
+        // Find the lunch request by ID or fail if not found
         $lunchRequest = LunchRequest::findOrFail($id);
-        return view('lunch_request.show', compact('lunchRequest'));
+
+        // Get the associated eatery
+        $eatery = $lunchRequest->eatery;
+
+        // Get all the foods related to this eatery
+        $foods = $eatery->foods;
+
+        // Get all the orders associated with this lunch request, including the user who placed the order
+        $orders = $lunchRequest->orders()->with('user')->get();
+
+        // Pass the lunch request, eatery, foods, and orders to the view
+        return view('lunch_request.show', compact('lunchRequest', 'eatery', 'foods', 'orders'));
     }
+
+
     public function updateStatus(Request $request, $id)
     {
         $lunchRequest = LunchRequest::findOrFail($id);
