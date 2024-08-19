@@ -36,6 +36,7 @@
             <div style="flex-grow: 1;">
                 <p><strong>{{ $order->food->name }}</strong></p>
                 <p>Số lượng: {{ $order->quantity }}</p>
+                <p><strong>Nhân viên đặt: {{ $order->user->name }}</strong></p>
             </div>
             <div style="text-align: right;">
                 <p>Thành tiền: {{ number_format($order->quantity * $order->food->price, 0, ',', '.') }} VND</p>
