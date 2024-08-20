@@ -277,8 +277,7 @@
                         var lunchRequestDate = moment(lunch_request.date); // Ngày của yêu cầu
 
                         // Kiểm tra nếu yêu cầu còn mở
-                        var isOpen = (lunch_request.status === 'open' && lunchRequestDate.isSameOrAfter(now,
-                            'day'));
+                        var isOpen = (lunch_request.status === 'open' && lunchRequestDate.isSameOrAfter(now));
 
                         var content = `
                     <p><strong>Quán ăn:</strong> ${eatery.name}</p>
